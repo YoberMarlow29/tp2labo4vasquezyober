@@ -1,1 +1,35 @@
-<p>login works!</p>
+<div class="container">
+  <div class="row justify-content-center mt-5">
+    <div class="col-md-6">
+      <div class="card shadow">
+        <div class="card-body">
+          <h3 class="card-title text-center mb-4">Iniciar Sesión</h3>
+          <form (ngSubmit)="login()">
+            <div class="mb-3">
+              <label for="email" class="form-label">Correo Electrónico</label>
+              <input type="email" class="form-control" id="email" name="email" [(ngModel)]="email" required>
+            </div>
+            <div class="mb-3">
+              <label for="password" class="form-label">Contraseña</label>
+              <input type="password" class="form-control" id="password" name="password" [(ngModel)]="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Iniciar Sesión</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Botones de acceso rápido -->
+  <div class="row mt-4">
+    <div class="col-md-4">
+      <button class="btn btn-secondary w-100" (click)="quickLogin('paciente')">Acceso Paciente</button>
+    </div>
+    <div class="col-md-4">
+      <button class="btn btn-secondary w-100" (click)="quickLogin('especialista')">Acceso Especialista</button>
+    </div>
+    <div class="col-md-4">
+      <button class="btn btn-secondary w-100" (click)="quickLogin('administrador')">Acceso Administrador</button>
+    </div>
+  </div>
+</div>

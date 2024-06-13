@@ -1,1 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
+body{
+
+  background-image: url(./assets/images/fondo.png);
+}
+body.page-404 {
+  background-image: none;
+  background-color: #2F3242 !important; /* Usa !important para asegurar la prioridad */
+}
