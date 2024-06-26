@@ -1,0 +1,82 @@
+body {
+  margin-top: 20px;
+}
+
+.card-style1 {
+  box-shadow: 0px 0px 10px 0px rgb(89 75 128 / 9%);
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  background-color: #fff;
+  background-clip: border-box;
+  border: 1px solid rgba(0, 0, 0, .125);
+  border-radius: 0.25rem;
+}
+
+section {
+  padding: 120px 0;
+  overflow: hidden;
+  background: #fff;
+}
+
+.text-primary {
+  color: #ceaa4d !important;
+}
+
+.text-secondary {
+  color: #15395A !important;
+}
+
+.font-weight-600 {
+  font-weight: 600;
+}
+
+.display-26 {
+  font-size: 1.3rem;
+}
+
+.p-1-9 {
+  padding: 1.9rem;
+}
+
+.p-sm-2-3 {
+  padding: 2.3rem;
+}
+
+.p-md-6 {
+  padding: 3.5rem;
+}
+
+.p-lg-7 {
+  padding: 4rem;
+}
+
+.bg-secondary {
+  background: #15395A !important;
+}
+
+.rounded {
+  border-radius: 0.25rem !important;
+}
+
+.profile-image {
+  width: 150px; /* Ajustar el tamaño de la imagen de perfil */
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover; /* Asegura que la imagen mantenga su proporción */
+}
+
+@media (min-width: 992px) {
+  .d-lg-inline-block {
+    display: inline-block !important;
+  }
+}
+
+.mt-3 {
+  margin-top: 1rem;
+}

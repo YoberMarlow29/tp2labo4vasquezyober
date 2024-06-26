@@ -1,0 +1,18 @@
+<div *ngIf="!selectedEspecialista; else especialidadesView">
+  <div class="especialistas-container">
+    <button *ngFor="let especialista of especialistas" class="especialista-btn" (click)="seleccionarEspecialista(especialista)">
+      <img [src]="especialista.pathFoto[0]" alt="Foto del Especialista">
+      <p>{{ especialista.nombre }}</p>
+    </button>
+  </div>
+</div>
+
+<ng-template #especialidadesView>
+  <button class="volver-btn" (click)="volverAEspecialistas()">Volver</button>
+  <div class="especialidades-container">
+    <button *ngFor="let especialidad of especialidades" class="especialidad-btn">
+      <img [src]="especialidad.imagen" alt="Imagen de la Especialidad">
+      <p>{{ especialidad.nombre }}</p>
+    </button>
+  </div>
+</ng-template>

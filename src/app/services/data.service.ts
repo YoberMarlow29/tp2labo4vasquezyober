@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Firestore, collection, doc, getDocs, setDoc, deleteDoc, updateDoc, onSnapshot, query, QuerySnapshot, orderBy, Query, limit, DocumentSnapshot, getDoc, FieldPath } from '@angular/fire/firestore';
-import { Persona } from '../models/Persona';
-
+import { Usuario } from '../models/Usuario';
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
+  getUserData(uid: string) {
+    throw new Error('Method not implemented.');
+  }
 
   constructor(private firestore: Firestore) { }
 
@@ -38,7 +40,6 @@ export class DataService {
 
     return arrAux;
   }
-
   /**
    * Trae un único objeto guardado en el documento especificado de la colección de `Firestore`.
    *
@@ -47,25 +48,27 @@ export class DataService {
    * @param docId - El ID del documento a traer en la colección en `Firestore`.
    * @returns Una promesa con el dato pedido.
    */
-  async traerDoc<T>(coleccion: string, docId: string): Promise<T> {
-    const docRef = doc(this.firestore, coleccion, docId);
+  async traerDoc<T>(coleccion: string, docId: string): Promise<T | null> {
+    try {
+      // console.log(`Buscando documento en la colección ${coleccion} con ID ${docId}`);
+      const docRef = doc(this.firestore, coleccion, docId);
+      const docSnap = await getDoc(docRef);
 
-    const data = (await getDoc(docRef)).data();
-    return data as T;
+      if (docSnap.exists()) {
+        // console.log("Documento encontrado:", docSnap.data());
+        const data = docSnap.data();
+        return data as T;
+      } else {
+        // console.error(`No se encontró el documento en la colección ${coleccion} con ID ${docId}`);
+        return null;
+      }
+    } catch (error) {
+      // console.error("Error obteniendo el documento:", error);
+      throw error;
+    }
   }
 
-  /**
-   * Sube un objeto a la colección de `Firestore` y asigna el ID del documento al campo ID del objeto (si se indica).
-   *
-   * @async
-   * @param coleccion - El nombre de la colección en `Firestore`.
-   * @param data - El objeto o dato a subir.
-   * @param docIdAutom - Indica si la función debe o no asignar el ID del documento al objeto .
-   * @returns El ID del documento en `Firestore`.
-   *
-   * @throws y elimina el documento si se encuentra con algún error a la hora de subir.
-   */
-  async subirDoc(coleccion: string, data: any, docIdAutom: boolean = true): Promise<string> {
+  async subirDocEspecialidad(coleccion: string, data: any, docIdAutom: boolean = true): Promise<string> {
     const col = collection(this.firestore, coleccion);
     const nuevoDoc = doc(col);
     if (docIdAutom)
@@ -76,11 +79,38 @@ export class DataService {
     } catch (error) {
       deleteDoc(nuevoDoc);
       console.log(error);
-      // throw new Exception(ErrorCodes.ActualizarDocError, 'Hubo un problema al subir los datos.');
     }
 
     return nuevoDoc.id;
   }
+
+
+    /**
+   * Sube un objeto a la colección de `Firestore` y asigna el UID del usuario como ID del documento.
+   *
+   * @async
+   * @param coleccion - El nombre de la colección en `Firestore`.
+   * @param data - El objeto o dato a subir.
+   * @param docId - El ID del documento (UID del usuario).
+   * @returns El ID del documento en `Firestore`.
+   *
+   * @throws y elimina el documento si se encuentra con algún error a la hora de subir.
+   */
+    async subirDoc(coleccion: string, data: any, docId?: string): Promise<string> {
+
+      const col = collection(this.firestore, coleccion);
+      const nuevoDoc = doc(col, docId);
+      try {
+        await setDoc(nuevoDoc, { ...data });
+      } catch (error) {
+        await deleteDoc(nuevoDoc);
+        console.log(error);
+        throw error;
+      }
+
+      return nuevoDoc.id;
+
+    }
 
   /**
    * Actualiza un doc en la colección de `Firestore`.
@@ -139,7 +169,18 @@ export class DataService {
         arrayPointer.sort(ordenFunc);
     });
   }
-
+  /**
+   * Elimina un documento específico de la colección especificada en Firestore.
+   *
+   * @async
+   * @param coleccion - El nombre de la colección en Firestore.
+   * @param docId - El ID del documento a eliminar.
+   * @returns Una promesa que se resuelve cuando se elimina correctamente el documento.
+   */
+  async borrarDoc(coleccion: string, docId: string): Promise<void> {
+    const docRef = doc(this.firestore, coleccion, docId);
+    await deleteDoc(docRef);
+  }
   /**
    * Busca el usuario que tenga registrado su correo con el parámetro de búsqueda.
    * Por predeterminado busca en la colección `users`.
@@ -148,15 +189,12 @@ export class DataService {
    * @param correo - Correo a buscar.
    * @returns Si lo encuentra, el usuario con el correo indicado.
    *
-   * @throws Si no se encuentra el correo.
    */
-  // async buscarUsuarioPorCorreo(correo: string): Promise<Persona> {
-  //   const usuarios = await this.traerColeccion<Persona>("");
-  //   const index = usuarios.findIndex(u => u.correo === correo);
-  //   if (index === -1) throw new Exception(ErrorCodes.CorreoNoRegistrado, 'Esta dirección de correo no está registrada.');
-
-  //   return usuarios[index];
-  // }
+  async buscarUsuarioPorCorreo(correo: string): Promise<Usuario> {
+    const usuarios = await this.traerColeccion<Usuario>("user");
+    const index = usuarios.findIndex(u => u.email === correo);
+    return usuarios[index];
+  }
 
   /**
    * Busca el usuario que tenga registrado su DNI con el parámetro de búsqueda.
@@ -166,13 +204,11 @@ export class DataService {
    * @param dni - DNI a buscar.
    * @returns Si lo encuentra, el usuario con el DNI indicado.
    *
-   * @throws Si no se encuentra el DNI.
    */
-  // async buscarUsuarioPorDni(dni: number): Promise<Persona> {
-  //   const usuarios = await this.traerColeccion<Persona>(Colecciones.Usuarios);
-  //   const index = usuarios.findIndex(u => u.dni === dni);
-  //   if (index === -1) throw new Exception(ErrorCodes.DniNoRegistrado, 'Este DNI no está registrado.');
+  async buscarUsuarioPorDni(dni: number): Promise<Usuario> {
+    const usuarios = await this.traerColeccion<Usuario>("user");
+    const index = usuarios.findIndex(u => u.dni === dni);
 
-  //   return usuarios[index];
-  // }
+    return usuarios[index];
+  }
 }

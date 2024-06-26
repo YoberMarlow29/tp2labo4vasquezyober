@@ -1,0 +1,35 @@
+<section class="bg-light">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 mb-4 mb-sm-5">
+        <div class="card card-style1 border-0">
+          <div class="card-body p-1-9 p-sm-2-3 p-md-6 p-lg-7">
+            <div class="row align-items-center" *ngIf="usuario">
+              <div class="col-lg-6 mb-4 mb-lg-0 text-center">
+                <img [src]="usuario.pathFoto[0]" class="profile-image" alt="Imagen de Perfil">
+              </div>
+              <div class="col-lg-6 px-xl-10">
+                <div class="bg-secondary d-lg-inline-block py-1-9 px-1-9 px-sm-6 mb-1-9 rounded">
+                  <h3 class="h2 text-white mb-0">{{ usuario.nombre }} {{ usuario.apellido }}</h3>
+                  <span class="text-primary">{{ usuario.rol }}</span>
+                </div>
+                <ul class="list-unstyled mb-1-9">
+                  <li class="mb-2 mb-xl-3 display-28">
+                    <span class="display-26 text-secondary me-2 font-weight-600">Edad:</span> {{ usuario.edad }}
+                  </li>
+                  <li class="mb-2 mb-xl-3 display-28">
+                    <span class="display-26 text-secondary me-2 font-weight-600">DNI:</span> {{ usuario.dni }}
+                  </li>
+                  <li class="mb-2 mb-xl-3 display-28">
+                    <span class="display-26 text-secondary me-2 font-weight-600">Email:</span> {{ usuario.email }}
+                  </li>
+                </ul>
+                <button (click)="logout()" class="btn btn-danger mt-3">Cerrar Sesión</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

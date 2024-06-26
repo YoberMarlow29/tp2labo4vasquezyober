@@ -14,7 +14,6 @@ export const appConfig: ApplicationConfig = {
     "projectId":"segundotplabo",
     "appId":"1:937951349338:web:c9464e0b996b5e6eec6663",
     "storageBucket":"segundotplabo.appspot.com",
-    //  "locationId":"us-central",
     "apiKey":"AIzaSyAIeqmWSbVqWF-McCSRFC--LrZyJ2rPyWo",
     "authDomain":"segundotplabo.firebaseapp.com",
     "messagingSenderId":"937951349338"})),

@@ -1,0 +1,25 @@
+.profile-button {
+  width: 100px; /* Ancho del botón cuadrado */
+  height: 100px; /* Altura del botón cuadrado */
+  border-radius: 0; /* Botones cuadrados */
+  overflow: hidden; /* Ocultar cualquier parte de la imagen que se desborde */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.profile-button img {
+  max-width: 100%; /* Ajustar la imagen dentro del cuadrado */
+  max-height: 100%;
+}
+
+.user-button-container {
+  margin-bottom: 15px;
+}
+
+@media (max-width: 768px) {
+  .profile-button {
+    width: 100px; /* Disminuir el tamaño del botón en pantallas pequeñas */
+    height: 100px;
+  }
+}

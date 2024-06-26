@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ListaAdminComponent } from './lista-admin.component';
+import { SolicitarTurnoComponent } from './solicitar-turno.component';
 
-describe('ListaAdminComponent', () => {
-  let component: ListaAdminComponent;
-  let fixture: ComponentFixture<ListaAdminComponent>;
+describe('SolicitarTurnoComponent', () => {
+  let component: SolicitarTurnoComponent;
+  let fixture: ComponentFixture<SolicitarTurnoComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ListaAdminComponent]
+      imports: [SolicitarTurnoComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(ListaAdminComponent);
+    fixture = TestBed.createComponent(SolicitarTurnoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

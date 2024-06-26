@@ -1,0 +1,224 @@
+<div class="container">
+  <!-- Botones para seleccionar el tipo de registro -->
+  <div class="button patient" *ngIf="!esPaciente && !esEspecialista" (click)="selectPaciente()">
+    <a>Pacientes</a>
+  </div>
+  <div class="button specialist" *ngIf="!esPaciente && !esEspecialista" (click)="selectEspecialista()">
+    <a>Especialistas</a>
+  </div>
+  <button class="btn btn-secondary" *ngIf="esPaciente || esEspecialista" (click)="goBack()">Atrás</button>
+
+   <!-- Formulario de Registro de Paciente -->
+   <section *ngIf="esPaciente" class="vh-100 gradient-custom">
+    <div class="container-fluid py-5 h-100">
+      <div class="row justify-content-center align-items-center h-100">
+        <div class="col-12">
+          <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
+            <div class="card-body p-4 p-md-5">
+              <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">Formulario de Registro de Pacientes</h3>
+              <form [formGroup]="pacienteForm" (ngSubmit)="registerPaciente()">
+                <div class="row">
+                  <div class="col-md-6 mb-4">
+                    <div class="form-outline">
+                      <label class="form-label" for="nombrePaciente">Nombre</label>
+                      <input type="text" formControlName="nombre" id="nombrePaciente" class="form-control form-control-lg" />
+                      <div *ngIf="pacienteForm.get('nombre')?.touched && pacienteForm.get('nombre')?.invalid">
+                        <small class="text-danger">Nombre es requerido</small>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6 mb-4">
+                    <div class="form-outline">
+                      <label class="form-label" for="apellidoPaciente">Apellido</label>
+                      <input type="text" formControlName="apellido" id="apellidoPaciente" class="form-control form-control-lg" />
+                      <div *ngIf="pacienteForm.get('apellido')?.touched && pacienteForm.get('apellido')?.invalid">
+                        <small class="text-danger">Apellido es requerido</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6 mb-4">
+                    <div class="form-outline">
+                      <label class="form-label" for="edadPaciente">Edad</label>
+                      <input type="text" formControlName="edad" id="edadPaciente" class="form-control form-control-lg" />
+                      <div *ngIf="pacienteForm.get('edad')?.touched && pacienteForm.get('edad')?.invalid">
+                        <small class="text-danger">Edad es requerida y debe ser un número</small>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6 mb-4">
+                    <div class="form-outline">
+                      <label class="form-label" for="dniPaciente">DNI</label>
+                      <input type="text" formControlName="dni" id="dniPaciente" class="form-control form-control-lg" />
+                      <div *ngIf="pacienteForm.get('dni')?.touched && pacienteForm.get('dni')?.invalid">
+                        <small class="text-danger">DNI es requerido y debe ser un número de 8 dígitos</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6 mb-4">
+                    <div class="form-outline">
+                      <label class="form-label" for="emailPaciente">Email</label>
+                      <input type="email" formControlName="email" id="emailPaciente" class="form-control form-control-lg" />
+                      <div *ngIf="pacienteForm.get('email')?.touched && pacienteForm.get('email')?.invalid">
+                        <small class="text-danger">Email es requerido y debe ser válido</small>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6 mb-4">
+                    <div class="form-outline">
+                      <label class="form-label" for="passwordPaciente">Password</label>
+                      <input type="password" formControlName="password" id="passwordPaciente" class="form-control form-control-lg" />
+                      <div *ngIf="pacienteForm.get('password')?.touched && pacienteForm.get('password')?.invalid">
+                        <small class="text-danger">Password es requerida y debe tener al menos 6 caracteres</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6 mb-4">
+                    <div class="form-outline">
+                      <label class="form-label" for="obraSocialPaciente">Obra Social</label>
+                      <input type="text" formControlName="obraSocial" id="obraSocialPaciente" class="form-control form-control-lg" />
+                    </div>
+                  </div>
+                  <div class="col-md-6 mb-4">
+                    <label class="form-label" for="profileImagesPaciente">Fotos de Perfil</label>
+                    <input type="file" id="profileImagesPaciente" (change)="onFileSelected($event)" multiple accept="image/*" class="form-control form-control-lg" />
+                    <div class="mt-2">
+                      <img *ngFor="let imagePreview of imagePreviews" [src]="imagePreview" class="img-thumbnail" style="max-width: 100px; max-height: 100px; margin-right: 5px;" />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mt-4 pt-2">
+                  <button class="btn btn-primary btn-lg" type="submit" [disabled]="pacienteForm.invalid">Registrarse</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Formulario de Registro de Especialista -->
+  <section *ngIf="esEspecialista" class="vh-100 gradient-custom">
+    <div class="container-fluid py-5 h-100">
+      <div class="row justify-content-center align-items-center h-100">
+        <div class="col-12">
+          <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
+            <div class="card-body p-4 p-md-5">
+              <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">Formulario de Registro de Especialistas</h3>
+              <form [formGroup]="especialistaForm" (ngSubmit)="registerEspecialista()">
+                <!-- Campos del Formulario -->
+                <div class="row">
+                  <div class="col-md-6 mb-4">
+                    <div class="form-outline">
+                      <label class="form-label" for="nombreEspecialista">Nombre</label>
+                      <input type="text" formControlName="nombre" id="nombreEspecialista" class="form-control form-control-lg" />
+                      <div *ngIf="especialistaForm.get('nombre')?.touched && especialistaForm.get('nombre')?.invalid">
+                        <small class="text-danger">Nombre es requerido</small>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6 mb-4">
+                    <div class="form-outline">
+                      <label class="form-label" for="apellidoEspecialista">Apellido</label>
+                      <input type="text" formControlName="apellido" id="apellidoEspecialista" class="form-control form-control-lg" />
+                      <div *ngIf="especialistaForm.get('apellido')?.touched && especialistaForm.get('apellido')?.invalid">
+                        <small class="text-danger">Apellido es requerido</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6 mb-4">
+                    <div class="form-outline">
+                      <label class="form-label" for="edadEspecialista">Edad</label>
+                      <input type="text" formControlName="edad" id="edadEspecialista" class="form-control form-control-lg" />
+                      <div *ngIf="especialistaForm.get('edad')?.touched && especialistaForm.get('edad')?.invalid">
+                        <small class="text-danger">Edad es requerida y debe ser un número</small>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6 mb-4">
+                    <div class="form-outline">
+                      <label class="form-label" for="dniEspecialista">DNI</label>
+                      <input type="text" formControlName="dni" id="dniEspecialista" class="form-control form-control-lg" />
+                      <div *ngIf="especialistaForm.get('dni')?.touched && especialistaForm.get('dni')?.invalid">
+                        <small class="text-danger">DNI es requerido y debe ser un número de 8 dígitos</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6 mb-4">
+                    <div class="form-outline">
+                      <label class="form-label" for="emailEspecialista">Email</label>
+                      <input type="email" formControlName="email" id="emailEspecialista" class="form-control form-control-lg" />
+                      <div *ngIf="especialistaForm.get('email')?.touched && especialistaForm.get('email')?.invalid">
+                        <small class="text-danger">Email es requerido y debe ser válido</small>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6 mb-4">
+                    <div class="form-outline">
+                      <label class="form-label" for="passwordEspecialista">Password</label>
+                      <input type="password" formControlName="password" id="passwordEspecialista" class="form-control form-control-lg" />
+                      <div *ngIf="especialistaForm.get('password')?.touched && especialistaForm.get('password')?.invalid">
+                        <small class="text-danger">Password es requerida y debe tener al menos 6 caracteres</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6 mb-4">
+                    <div class="form-outline">
+                      <label class="form-label" for="especialidades">Especialidades</label>
+                      <select id="especialidades" class="form-control" (change)="onChangeEspecialidad($event)">
+                        <option value="Elegir especialidad" disabled>Elegir especialidad</option>
+                        <option *ngFor="let especialidad of especialidades" [value]="especialidad.nombre">{{ especialidad.nombre }}</option>
+                        <option value="Agregar Especialidad">Agregar Especialidad</option>
+                      </select>
+                      <div class="mt-2" *ngIf="especialistaForm.get('especialidad')?.value">
+                        <span *ngFor="let especialidad of especialistaForm.get('especialidad')?.value" class="badge bg-primary mx-1">
+                          {{ especialidad }}
+                          <button type="button" class="btn-close btn-close-white" aria-label="Close" (click)="eliminarEspecialidad(especialidad)"></button>
+                        </span>
+                      </div>
+                    </div>
+                    <div *ngIf="agregarEspecialidad" class="mt-2">
+                      <input type="text" formControlName="nuevaEspecialidad" id="nuevaEspecialidad" class="form-control" placeholder="Nueva especialidad" />
+                    </div>
+                  </div>
+                  <div class="col-md-6 mb-4">
+                    <label class="form-label" for="profileImagesEspecialista">Fotos de Perfil</label>
+                    <input type="file" id="profileImagesEspecialista" (change)="onFileSelected($event)" multiple accept="image/*" class="form-control form-control-lg" />
+                    <div class="mt-2">
+                      <img *ngFor="let imagePreview of imagePreviews" [src]="imagePreview" class="img-thumbnail" style="max-width: 100px; max-height: 100px; margin-right: 5px;" />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mt-4 pt-2">
+                  <button class="btn btn-primary btn-lg" type="submit" [disabled]="especialistaForm.invalid">Registrarse</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+</div>

@@ -1,1 +1,16 @@
-{}
+{
+  "hosting": {
+    "public": "dist/tp2labo4vasquezyober/browser",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}

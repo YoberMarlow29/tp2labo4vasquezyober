@@ -1,6 +1,19 @@
 <div class="container">
-  <div class="row justify-content-center mt-5">
-    <div class="col-md-6">
+  <div class="row mt-5">
+    <!-- Botones de acceso rápido para usuarios -->
+    <div class="col-md-4">
+      <div class="d-flex flex-wrap justify-content-around">
+        <div *ngFor="let user of users" class="user-button-container">
+          <button class="btn btn-secondary profile-button" (click)="quickLogin(user.role.toLowerCase())">
+            <img *ngIf="user.fotoUrl" [src]="user.fotoUrl" alt="Imagen de Perfil" class="profile-image">
+          </button>
+          <div class="text-center mt-2">{{ user.role }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Formulario de inicio de sesión -->
+    <div class="col-md-8">
       <div class="card shadow">
         <div class="card-body">
           <h3 class="card-title text-center mb-4">Iniciar Sesión</h3>
@@ -17,19 +30,6 @@
           </form>
         </div>
       </div>
-    </div>
-  </div>
-
-  <!-- Botones de acceso rápido -->
-  <div class="row mt-4">
-    <div class="col-md-4">
-      <button class="btn btn-secondary w-100" (click)="quickLogin('paciente')">Acceso Paciente</button>
-    </div>
-    <div class="col-md-4">
-      <button class="btn btn-secondary w-100" (click)="quickLogin('especialista')">Acceso Especialista</button>
-    </div>
-    <div class="col-md-4">
-      <button class="btn btn-secondary w-100" (click)="quickLogin('administrador')">Acceso Administrador</button>
     </div>
   </div>
 </div>

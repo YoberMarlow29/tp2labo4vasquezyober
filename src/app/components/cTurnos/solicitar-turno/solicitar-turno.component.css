@@ -1,0 +1,71 @@
+.especialistas-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.especialista-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: none;
+  background-color: #f0f0f0;
+  padding: 10px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.especialista-btn img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+.especialista-btn p {
+  margin: 0;
+  font-size: 14px;
+}
+
+.volver-btn {
+  display: block;
+  margin-bottom: 20px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.especialidades-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.especialidad-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: none;
+  background-color: #f0f0f0;
+  padding: 10px;
+  cursor: pointer;
+  text-align: center;
+  border-radius: 50%;
+}
+
+.especialidad-btn img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+.especialidad-btn p {
+  margin: 0;
+  font-size: 12px;
+}
