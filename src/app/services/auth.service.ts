@@ -60,8 +60,6 @@ export class AuthService {
       const ssFireUser = sessionStorage.getItem('fireUser');
       const fireUserViejo: FireUser | null = ssFireUser ? JSON.parse(ssFireUser) : null;
 
-
-
       const authInst = !fireUserViejo ? this.auth : getAuth(initializeApp({
         "projectId":"segundotplabo",
         "appId":"1:937951349338:web:c9464e0b996b5e6eec6663",

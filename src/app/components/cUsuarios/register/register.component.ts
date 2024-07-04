@@ -168,7 +168,7 @@ export default class RegisterComponent {
 
   async addEspecialidad(nuevaEspecialidad: Especialidad) {
     try {
-      await this.dataService.subirDocEspecialidad('especialidades', nuevaEspecialidad);
+      await this.dataService.subirDocNoUsuarios('especialidades', nuevaEspecialidad);
       this.especialidades.push(nuevaEspecialidad);
     } catch (error) {
       console.log("error", error);

@@ -24,8 +24,35 @@
                     <span class="display-26 text-secondary me-2 font-weight-600">Email:</span> {{ usuario.email }}
                   </li>
                 </ul>
-                <button (click)="logout()" class="btn btn-danger mt-3">Cerrar Sesión</button>
+                <button (click)="logout()" class="btn btn-primary mt-3">Cerrar sesión</button>
               </div>
+            </div>
+            <hr>
+            <div *ngIf="usuario?.rol === 'especialista'">
+              <h4>Disponibilidad:</h4>
+              <div class="row">
+                <div *ngFor="let dia of ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']" class="col-2 mb-3">
+                  <button class="btn btn-info w-100" (click)="agregarHorario(dia)">
+                    {{ dia }}
+                  </button>
+                  <div *ngIf="horarios[dia]" class="mt-2">
+                    <div *ngFor="let horario of horarios[dia]; let i = index">
+                      <label>Desde:
+                        <select [(ngModel)]="horario.desde">
+                          <option *ngFor="let hora of getHorasInicioDisponibles(dia, i)" [value]="hora">{{ hora }}</option>
+                        </select>
+                      </label>
+                      <label>Hasta:
+                        <select [(ngModel)]="horario.hasta">
+                          <option *ngFor="let hora of getHorasFinDisponibles(dia, i)" [value]="hora">{{ hora }}</option>
+                        </select>
+                      </label>
+                      <button class="btn btn-danger btn-sm" (click)="eliminarHorario(dia)">Eliminar</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button (click)="guardarDisponibilidad()" class="btn btn-success mt-3">Guardar Disponibilidad</button>
             </div>
           </div>
         </div>

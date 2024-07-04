@@ -1,71 +1,110 @@
-.especialistas-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.especialista-btn {
+/* Estilos para tarjetas de especialidad, especialista y paciente */
+.especialidad-card, .especialista-card {
+  height: 250px; /* Altura fija para todas las tarjetas */
+  flex-grow: 1; /* Ocupar todo el espacio disponible */
   display: flex;
   flex-direction: column;
-  align-items: center;
-  border: none;
-  background-color: #f0f0f0;
-  padding: 10px;
+  justify-content: space-between;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
   cursor: pointer;
+  overflow: hidden; /* Ocultar contenido que desborde */
+}
+
+.especialidad-card img, .especialista-card img {
+  max-height: 150px; /* Altura máxima para la imagen */
+  object-fit: contain;
+}
+
+.especialidad-card .card-body, .especialista-card .card-body {
+  padding: 1rem;
   text-align: center;
 }
 
-.especialista-btn img {
+.profile-image {
   width: 100px;
   height: 100px;
-  object-fit: cover;
   border-radius: 50%;
-  margin-bottom: 10px;
+  object-fit: cover;
 }
 
-.especialista-btn p {
-  margin: 0;
-  font-size: 14px;
+/* Estilo para botones seleccionados */
+.button-pressed {
+  transform: scale(0.95);
 }
 
-.volver-btn {
-  display: block;
-  margin-bottom: 20px;
-  padding: 10px 20px;
+.dias-disponibles button, .fechas-disponibles button, .turnos-disponibles button {
+  width: auto;
+  text-align: center;
+  margin: 0.5rem;
+  display: inline-block;
+}
+
+.dias-disponibles button.selected, .fechas-disponibles button.selected {
   background-color: #007bff;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-  border-radius: 5px;
+  color: white;
 }
 
-.especialidades-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.especialidad-btn {
+.card-body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  border: none;
-  background-color: #f0f0f0;
-  padding: 10px;
-  cursor: pointer;
-  text-align: center;
-  border-radius: 50%;
 }
 
-.especialidad-btn img {
-  width: 80px;
-  height: 80px;
+.btn-outline-primary {
+  color: #007bff;
+  border-color: #007bff;
+}
+
+.btn-outline-primary:hover {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.mt-4 {
+  margin-top: 1.5rem;
+}
+
+.me-2 {
+  margin-right: 0.5rem;
+}
+
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+/* Asegurar que los horarios se alineen horizontalmente */
+.row .col-4 {
+  max-width: 33.333333%;
+}
+
+/* Asegurar que cada día ocupe un tercio del ancho total */
+.d-flex {
+  flex-direction: row;
+  justify-content: center;
+}
+
+/* Estilo para imagen de perfil en la selección de especialista */
+.profile-image {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
   object-fit: cover;
-  border-radius: 50%;
-  margin-bottom: 10px;
 }
 
-.especialidad-btn p {
-  margin: 0;
-  font-size: 12px;
+/* Animación de presionar botón */
+.btn-primary {
+  transition: transform 0.2s ease;
 }
+
+.btn-primary:hover {
+  transform: scale(0.95);
+}
+
+/* Estilos adicionales según necesidades */

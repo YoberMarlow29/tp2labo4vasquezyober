@@ -8,17 +8,13 @@ export const pacienteAceptado: CanActivateFn = async (route, state) => {
   const authService = inject(AuthService);
   const dataService = inject(DataService);
 
-  const currentUser = await authService.currentUser();
-  if (!currentUser) {
-    return false;
-  }
-  const userDoc = await dataService.traerDoc<Especialista>('user', currentUser.uid);
+  const userDoc = await dataService.traerDoc<Especialista>('user', authService.UsuarioEnSesion.uid);
 
-  if(userDoc.rol=="admin"|| userDoc.rol=="paciente"){
+  if(authService.UsuarioEnSesion.rol === 'admin'||authService.UsuarioEnSesion.rol === 'paciente'){
 
     return true;
   }
-  else if (userDoc && userDoc.rol=== 'especialista'&& userDoc.esAceptado==true) {
+  else if (authService.UsuarioEnSesion.rol === 'especialista'&& userDoc.esAceptado==true) {
 
     return true;
   } else {

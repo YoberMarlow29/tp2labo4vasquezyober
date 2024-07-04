@@ -1,13 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, doc, getDocs, setDoc, deleteDoc, updateDoc, onSnapshot, query, QuerySnapshot, orderBy, Query, limit, DocumentSnapshot, getDoc, FieldPath } from '@angular/fire/firestore';
+import { Firestore, collection, doc, getDocs, setDoc, deleteDoc, updateDoc, onSnapshot, query, QuerySnapshot, orderBy, Query, limit, DocumentSnapshot, getDoc, FieldPath, where } from '@angular/fire/firestore';
 import { Usuario } from '../models/Usuario';
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
-  getUserData(uid: string) {
-    throw new Error('Method not implemented.');
-  }
 
   constructor(private firestore: Firestore) { }
 
@@ -68,7 +65,7 @@ export class DataService {
     }
   }
 
-  async subirDocEspecialidad(coleccion: string, data: any, docIdAutom: boolean = true): Promise<string> {
+  async subirDocNoUsuarios(coleccion: string, data: any, docIdAutom: boolean = true): Promise<string> {
     const col = collection(this.firestore, coleccion);
     const nuevoDoc = doc(col);
     if (docIdAutom)
@@ -83,7 +80,16 @@ export class DataService {
 
     return nuevoDoc.id;
   }
-
+  async verificarDisponibilidadTurno(coleccion: string, fecha: string, desde: string, hasta: string): Promise<boolean> {
+    const col = collection(this.firestore, coleccion);
+    const q = query(col,
+      where('horarioFechaTurno.fecha', '==', fecha),
+      where('horarioFechaTurno.desde', '==', desde),
+      where('horarioFechaTurno.hasta', '==', hasta),
+      where('estadoTurno', 'in', ['pendiente', 'aceptado']));
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.empty;
+  }
 
     /**
    * Sube un objeto a la colección de `Firestore` y asigna el UID del usuario como ID del documento.
@@ -100,11 +106,13 @@ export class DataService {
 
       const col = collection(this.firestore, coleccion);
       const nuevoDoc = doc(col, docId);
+
       try {
+
         await setDoc(nuevoDoc, { ...data });
+
       } catch (error) {
         await deleteDoc(nuevoDoc);
-        console.log(error);
         throw error;
       }
 

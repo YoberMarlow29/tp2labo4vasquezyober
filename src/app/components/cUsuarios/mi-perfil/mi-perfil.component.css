@@ -80,3 +80,21 @@ section {
 .mt-3 {
   margin-top: 1rem;
 }
+
+
+.calendar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.calendar-item {
+  flex: 1 0 14%; /* Ajusta el valor para cambiar el número de columnas */
+  text-align: center;
+}
+
+.calendar-item button {
+  width: 100%;
+  padding: 10px;
+}

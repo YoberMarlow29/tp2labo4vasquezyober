@@ -1,18 +1,123 @@
-<div *ngIf="!selectedEspecialista; else especialidadesView">
-  <div class="especialistas-container">
-    <button *ngFor="let especialista of especialistas" class="especialista-btn" (click)="seleccionarEspecialista(especialista)">
-      <img [src]="especialista.pathFoto[0]" alt="Foto del Especialista">
-      <p>{{ especialista.nombre }}</p>
-    </button>
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <!-- Sección de selección de pacientes (solo para administradores) -->
+    <div *ngIf="esAdministrador && !selectedPaciente" class="col-md-15">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h3 class="card-title text-center">Seleccionar Paciente</h3>
+          <div class="row">
+            <div class="col-6 col-sm-4 col-md-3 mb-3" *ngFor="let paciente of pacientes">
+              <div class="card h-100 text-center " (click)="seleccionarPaciente(paciente)">
+                <img [src]="paciente.pathFoto[0]" class="card-img-top rounded-circle img-fluid p-2" alt="Foto del Paciente">
+                <div class="card-body">
+                  <h5 class="card-title">{{ paciente.nombre }}</h5>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<!-- Sección de selección de especialidad -->
+<div *ngIf="(!esAdministrador || selectedPaciente) && !selectedEspecialidad" class="col-md-15">
+  <div class="card mb-4 ">
+    <div class="card-body">
+      <h3 class="card-title text-center">Selecciona una especialidad</h3>
+      <div class="row">
+        <div class="col-6 col-sm-4 col-md-3 mb-3" *ngFor="let especialidad of especialidades">
+          <div class="card h-100 text-center " (click)="seleccionarEspecialidad(especialidad)">
+            <img [src]="'assets/imagesEspecialidades/' + (especialidad.nombre || 'sinfoto') + '.png'" class="card-img-top img-fluid p-2" alt="{{ especialidad.nombre }}">
+            <div class="card-body">
+              <h5 class="card-title">{{ especialidad.nombre }}</h5>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
-<ng-template #especialidadesView>
-  <button class="volver-btn" (click)="volverAEspecialistas()">Volver</button>
-  <div class="especialidades-container">
-    <button *ngFor="let especialidad of especialidades" class="especialidad-btn">
-      <img [src]="especialidad.imagen" alt="Imagen de la Especialidad">
-      <p>{{ especialidad.nombre }}</p>
-    </button>
+    <!-- Sección de selección de especialista -->
+    <div *ngIf="selectedEspecialidad && !selectedEspecialista" class="col-md-15">
+      <button class="btn btn-secondary mb-3" (click)="volverAEspecialidades()">Volver a Especialidades</button>
+      <div class="card mb-4">
+        <div class="card-body">
+          <h3 class="card-title text-center">Selecciona un especialista</h3>
+          <div class="row">
+            <div class="col-6 col-sm-4 col-md-3 mb-3" *ngFor="let especialista of especialistas">
+              <div class="card h-100 text-center "
+                   (click)="seleccionarEspecialista(especialista)"
+                   [class.button-pressed]="especialista === selectedEspecialista">
+                <img [src]="especialista.pathFoto[0]" class="card-img-top rounded-circle img-fluid p-2" alt="Foto del Especialista">
+                <div class="card-body">
+                  <h5 class="card-title">{{ especialista.nombre }}</h5>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección de selección de día, fecha y turno -->
+    <div *ngIf="selectedEspecialista" class="col-md-15">
+      <button class="btn btn-secondary mb-3" (click)="volverAEspecialistas()">Volver a Especialistas</button>
+      <div class="card mb-4">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-4" *ngIf="selectedEspecialista">
+              <img [src]="selectedEspecialista.pathFoto[0]" class="profile-image rounded-circle" alt="Foto del Especialista">
+            </div>
+            <div class="col-md-8" *ngIf="selectedEspecialista">
+              <h5>{{ selectedEspecialista.nombre }}</h5>
+            </div>
+          </div>
+
+          <!-- Sección de selección de día -->
+          <h5 class="card-title mt-4">Selecciona un día disponible</h5>
+          <div class="dias-disponibles">
+            <button *ngFor="let dia of diasDisponibles"
+                    class="btn btn-outline-primary me-2 mb-2"
+                    (click)="seleccionarDia(dia)"
+                    [ngClass]="{ 'selected': dia === selectedDia }">
+              {{ dia }}
+            </button>
+          </div>
+
+          <!-- Sección de selección de fecha -->
+          <div *ngIf="selectedDia">
+            <h5 class="card-title mt-4">Selecciona una fecha disponible</h5>
+            <div class="fechas-disponibles">
+              <button *ngFor="let fecha of fechasDisponibles"
+                      class="btn btn-outline-primary me-2 mb-2"
+                      (click)="seleccionarFecha(fecha)"
+                      [ngClass]="{ 'selected': fecha === selectedFecha }">
+                {{ fecha }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Sección de selección de turno -->
+          <div *ngIf="selectedFecha">
+            <h5 class="card-title mt-4">Selecciona un horario disponible</h5>
+            <div class="turnos-disponibles">
+              <button *ngFor="let turno of turnosDisponibles"
+                      class="btn btn-outline-primary me-2 mb-2"
+                      (click)="seleccionarHora(turno)"
+                      [ngClass]="{ 'selected': turno === selectedHora }">
+                {{ turno.desde }} - {{ turno.hasta }}
+              </button>
+            </div>
+            <button *ngIf="selectedHora" class="btn btn-primary mt-3" (click)="solicitarTurno()">Solicitar Turno</button>
+          </div>
+
+          <!-- Mensaje de no hay turnos disponibles -->
+          <div *ngIf="selectedFecha && turnosDisponibles.length === 0" class="mt-4">
+            <p>No hay turnos disponibles para esta fecha. Por favor, selecciona otra fecha.</p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-</ng-template>
+</div>
