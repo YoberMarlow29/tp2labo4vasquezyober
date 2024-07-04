@@ -16,7 +16,7 @@ export class AuthService {
   private userSubject = new BehaviorSubject<Usuario | null>(null);
   public usuarioEnSesionObs = this.userSubject.asObservable();
 
-  constructor(private auth: Auth, private dataService: DataService, private router: Router) {
+  constructor(public auth: Auth, private dataService: DataService, private router: Router) {
     const storedUser = sessionStorage.getItem('usuario');
     if (storedUser) {
       this.userSubject.next(JSON.parse(storedUser));

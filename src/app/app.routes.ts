@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { pacienteAceptado } from './guards/PacienteAceptado.guard';
 import {canActivate,redirectUnauthorizedTo,redirectLoggedInTo } from "@angular/fire/auth-guard"
 import { esAdminGuard } from './guards/es-admin.guard';
+import { noEspecialistaGuard } from './guards/no-especialista.guard';
 
 export const routes: Routes = [
 
@@ -35,9 +36,12 @@ export const routes: Routes = [
   {
     path: 'miperfil', loadComponent: () => import('./components/cUsuarios/mi-perfil/mi-perfil.component'),
 
+
   },
   {
     path: 'sacarturno', loadComponent: () => import('./components/cTurnos/solicitar-turno/solicitar-turno.component'),
+    ...canActivate(()=> redirectLoggedInTo(['/home'])),
+    canActivate: [noEspecialistaGuard]
 
   },
 
