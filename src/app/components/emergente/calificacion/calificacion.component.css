@@ -1,0 +1,54 @@
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: #4fd1c5; /* Color turquesa */
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 500px;
+  width: 100%;
+}
+
+.modal-content h2,
+.modal-content label {
+  color: white;
+}
+
+.modal-content label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.modal-content textarea {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.modal-content button {
+  background-color: #2980b9; /* Color azul */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.modal-content button:hover {
+  background-color: #3498db; /* Color azul más claro */
+}
+
+.modal-content input[type="radio"] {
+  margin-right: 10px;
+}

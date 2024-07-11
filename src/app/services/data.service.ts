@@ -86,7 +86,7 @@ export class DataService {
       where('horarioFechaTurno.fecha', '==', fecha),
       where('horarioFechaTurno.desde', '==', desde),
       where('horarioFechaTurno.hasta', '==', hasta),
-      where('estadoTurno', 'in', ['pendiente', 'aceptado']));
+      where('estadoTurno', 'in', ['Pendiente', 'Aceptado']));
     const querySnapshot = await getDocs(q);
     return querySnapshot.empty;
   }

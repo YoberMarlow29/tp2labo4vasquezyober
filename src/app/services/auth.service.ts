@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { User as FireUser,Auth, createUserWithEmailAndPassword, onAuthStateChanged, sendEmailVerification, signInWithEmailAndPassword, getAuth, } from '@angular/fire/auth';
 import { DataService } from './data.service';
 import Swal from 'sweetalert2';
@@ -12,7 +12,7 @@ import { initializeApp } from 'firebase/app';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class AuthService implements OnDestroy {
   private userSubject = new BehaviorSubject<Usuario | null>(null);
   public usuarioEnSesionObs = this.userSubject.asObservable();
 
@@ -21,6 +21,11 @@ export class AuthService {
     if (storedUser) {
       this.userSubject.next(JSON.parse(storedUser));
     }
+    // window.addEventListener('beforeunload', this.logout.bind(this));
+
+  }
+  ngOnDestroy() {
+    // window.removeEventListener('beforeunload', this.logout.bind(this));
   }
 
   public get UsuarioEnSesion(): Usuario | null {

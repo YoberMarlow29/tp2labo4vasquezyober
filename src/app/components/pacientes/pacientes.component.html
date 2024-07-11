@@ -1,0 +1,29 @@
+<!-- pacientes.component.html -->
+<div class="container">
+  <div class="row row-cols-1 row-cols-md-4">
+    <div *ngFor="let pacienteTurnos of listaTurnosPorPaciente" class="col mb-4">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">{{ pacienteTurnos.paciente }}</h5>
+          <div *ngFor="let turno of pacienteTurnos.ultimosTurnos.slice(0, 3)" class="mb-3">
+            <div class="card">
+              <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">Fecha: {{ turno.horarioFechaTurno.fecha }}</h6>
+                <p class="card-text">Horario: {{ turno.horarioFechaTurno.desde }} - {{ turno.horarioFechaTurno.hasta }}</p>
+              </div>
+            </div>
+          </div>
+          <button (click)="verHistorial(pacienteTurnos.ultimosTurnos)">Ver Historial Clínico</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="listaTurnosPorPaciente.length === 0" class="card">
+    <div class="card-body">
+      <p class="card-text">No hay turnos finalizados disponibles.</p>
+    </div>
+  </div>
+
+  <!-- Modal de historial clínico -->
+  <app-lista-historial *ngIf="turnosPacienteSeleccionado" [turnos]="turnosPacienteSeleccionado" (cerrar)="cerrarModal()"></app-lista-historial>
+</div>

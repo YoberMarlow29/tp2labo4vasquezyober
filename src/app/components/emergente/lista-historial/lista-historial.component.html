@@ -1,0 +1,41 @@
+<!-- lista-historial.component.html -->
+<div class="modal">
+  <div class="modal-content">
+    <span class="close" (click)="cerrarModal()">&times;</span>
+    <h4>Historial de Turnos:</h4>
+    <table class="table">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">Especialidad</th>
+          <th scope="col">Especialista</th>
+          <th scope="col">Fecha</th>
+          <th scope="col">Hora</th>
+          <th scope="col">Altura</th>
+          <th scope="col">Peso</th>
+          <th scope="col">Temperatura</th>
+          <th scope="col">Presión</th>
+          <th scope="col">Datos adicionales</th>
+          <th scope="col">Comentario</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let turno of turnos">
+          <td>{{ turno.especialidad }}</td>
+          <td>{{ turno.nombreEspecialista }}</td>
+          <td>{{ turno.horarioFechaTurno.fecha }}</td>
+          <td>{{ turno.horarioFechaTurno.desde }} - {{ turno.horarioFechaTurno.hasta }}</td>
+          <td>{{ turno.historial?.altura }} cm</td>
+          <td>{{ turno.historial?.peso }} kg</td>
+          <td>{{ turno.historial?.temperatura }} °C</td>
+          <td>{{ turno.historial?.presion }}</td>
+          <td>
+            <div *ngFor="let dato of turno.historial?.datosDinamicos">
+              {{ dato.clave }}: {{ dato.valor }}
+            </div>
+          </td>
+          <td>{{ turno.historial?.comentario }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

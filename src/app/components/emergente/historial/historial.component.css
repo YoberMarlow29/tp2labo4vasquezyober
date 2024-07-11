@@ -1,0 +1,81 @@
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: #4fd1c5; /* Color turquesa */
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 600px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+}
+
+.modal-header {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.modal-content label {
+  color: white;
+}
+
+.input-group {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.form-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-right: 10px;
+}
+
+.form-group:last-child {
+  margin-right: 0;
+}
+
+.modal-content input[type="number"],
+.modal-content input[type="text"],
+.modal-content textarea {
+  padding: 6px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.modal-content input::placeholder {
+  color: #aaa;
+}
+
+.modal-content button {
+  background-color: #2980b9; /* Color azul */
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.modal-content button:hover {
+  background-color: #3498db; /* Color azul más claro */
+}
+
+.error {
+  color: red;
+  font-size: 12px;
+}

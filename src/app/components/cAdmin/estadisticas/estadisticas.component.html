@@ -1,0 +1,68 @@
+<section class="card">
+  <h5 class="card-title">Log de usuarios</h5>
+
+  <table class="table table-bordered">
+    <thead class="table-primary">
+      <tr>
+        <th>Nombre del Usuario</th>
+        <th>Fecha de Ingreso</th>
+        <th>Hora de Ingreso</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let log of listaLogUser">
+        <td>{{ log.nombreUsuario }}</td>
+        <td>{{ log.diaHorario.fecha }}</td>
+        <td>{{ log.diaHorario.hora }}</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="card">
+  <h5 class="card-title">Cantidad de turnos por especialidad</h5>
+
+  <div style="max-width: 600px; margin-top: 20px;">
+    <canvas id="pieChart"></canvas>
+  </div>
+</section>
+
+<section class="card">
+  <h5 class="card-title">Cantidad de turnos por día de la semana</h5>
+
+  <div style="max-width: 600px; margin-top: 20px;">
+    <canvas id="barChart"></canvas>
+  </div>
+</section>
+
+<section class="card">
+  <h5 class="card-title">Cantidad de turnos solicitados por médico que no fueron finalizados</h5>
+
+  <label for="startDate">Fecha de inicio:</label>
+  <input type="date" id="startDate" [(ngModel)]="startDate">
+
+  <label for="endDate">Fecha de fin:</label>
+  <input type="date" id="endDate" [(ngModel)]="endDate">
+
+  <button (click)="updateDoughnutChart()">Buscar</button>
+
+  <div style="max-width: 600px; margin-top: 20px;">
+    <canvas id="doughnutChart"></canvas>
+  </div>
+</section>
+
+<section class="card">
+  <h5 class="card-title">Cantidad de turnos solicitados por médico que fueron finalizados</h5>
+
+  <label for="startDate">Fecha de inicio:</label>
+  <input type="date" id="startDate" [(ngModel)]="startDateDos">
+
+  <label for="endDate">Fecha de fin:</label>
+  <input type="date" id="endDate" [(ngModel)]="endDateDos">
+
+  <button (click)="updateDoughnutChartFinalizado()">Buscar</button>
+
+  <div style="max-width: 600px; margin-top: 20px;">
+    <canvas id="doughnutChartDos"></canvas>
+  </div>
+</section>

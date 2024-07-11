@@ -6,6 +6,7 @@ import {  Especialidad, Turnos } from '../../../models/Interfaces';
 import { AuthService } from '../../../services/auth.service';
 import Swal from 'sweetalert2';
 import { Paciente } from '../../../models/Paciente';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-solicitar-turno',
@@ -16,12 +17,19 @@ import { Paciente } from '../../../models/Paciente';
 })
 export default class SolicitarTurnoComponent implements OnInit {
   especialistas: Especialista[] = [];
-  pacientes: Paciente[] = [];
+  pacientes: any[] = [];
   especialidades: Especialidad[] = [];
-  selectedEspecialista: Especialista = null;
-  selectedPaciente: Paciente = null;
 
+  selectedEspecialista: Especialista = null;
+  selectedPaciente: any = null;
   selectedEspecialidad: string = null;
+
+  esAdministrador: boolean = false;
+  mostrarSeleccionPaciente: boolean = false;
+  mostrarSeleccionEspecialistas: boolean = false;
+  mostrarSeleccionEspecialidad: boolean = false;
+  mostrarSeleccionDiaFechaHora: boolean = false;
+
   diasDisponibles: string[] = [];
   fechasDisponibles: string[] = [];
   turnosDisponibles: { desde: string, hasta: string }[] = [];
@@ -30,14 +38,12 @@ export default class SolicitarTurnoComponent implements OnInit {
   selectedFecha: string = null;
   selectedHora: { desde: string, hasta: string } = null;
 
-  esAdministrador: boolean = false;
-  mostrarSeleccionPaciente: boolean = false;
+  constructor(private dataService: DataService,private auth: AuthService, private spinner: NgxSpinnerService) {}
 
-  constructor(private dataService: DataService, private auth: AuthService) {}
+  ngOnInit() {
+    this.checkUserRole();
+    this.loadEspecialistas();
 
-  async ngOnInit() {
-    await this.checkUserRole();
-    this.loadEspecialidades();
   }
 
   async checkUserRole() {
@@ -46,62 +52,84 @@ export default class SolicitarTurnoComponent implements OnInit {
         this.esAdministrador = true;
         this.mostrarSeleccionPaciente = true;
         await this.loadPacientes();
-      } else {
+      } else if(this.auth.UsuarioEnSesion.rol==='paciente') {
         this.esAdministrador = false;
-        this.mostrarSeleccionPaciente = false;
+        this.mostrarSeleccionEspecialistas = true;
       }
     } catch (error) {
       console.error('Error al verificar el rol del usuario:', error);
     }
   }
 
-  async loadPacientes() {
+  async loadEspecialistas() {
     try {
-      const users = await this.dataService.traerColeccion<any>('user');
-      this.pacientes = users.filter(user => user.rol === 'paciente');
+      this.spinner.show();
+      const users = await this.dataService.traerColeccion<Especialista>('user');
+      this.especialistas = users.filter(user => user.rol === 'especialista');
     } catch (error) {
-      console.log("Error loading patients:", error);
+      console.error('Error al cargar los especialistas:', error);
+    } finally {
+      this.spinner.hide();
     }
   }
 
-  async loadEspecialidades() {
+  async loadEspecialidades(especialidades: string[]) {
     try {
+
+      this.spinner.show();
       this.especialidades = await this.dataService.traerColeccion<Especialidad>('especialidades');
+      this.especialidades = this.especialidades.filter(especialidad =>
+        especialidades.includes(especialidad.nombre)
+      );
     } catch (error) {
-      Swal.fire('Error', 'Error al obtener las especialidades. Por favor, intenta nuevamente.', 'error');
-    }
-  }
-
-  seleccionarEspecialidad(especialidad: Especialidad) {
-    this.selectedEspecialidad = especialidad.nombre;
-    this.loadUsuarios(especialidad.nombre);
-  }
-
-  async loadUsuarios(especialidad: string) {
-    try {
-      const users = await this.dataService.traerColeccion<any>('user');
-      this.especialistas = users.filter(user => user.rol === 'especialista' && user.especialidad.includes(especialidad));
-    } catch (error) {
-      console.log("Error loading specialists:", error);
+      console.error('Error al cargar las especialidades:', error);
+    } finally {
+       this.spinner.hide();
     }
   }
 
   seleccionarEspecialista(especialista: Especialista) {
+
     this.selectedEspecialista = especialista;
+    const especialidadesEspecialista = this.selectedEspecialista.especialidad;
+    this.loadEspecialidades(especialidadesEspecialista);
+    this.mostrarSeleccionEspecialistas=false;
+    this.mostrarSeleccionEspecialidad = true;
+
+
+  }
+
+  seleccionarEspecialidad(especialidad: Especialidad) {
+    this.selectedEspecialidad = especialidad.nombre;
     this.loadDiasDisponibles();
-  }
+    this.mostrarSeleccionEspecialidad = false;
+    this.mostrarSeleccionDiaFechaHora = true;
 
-  seleccionarPaciente(paciente: Paciente) {
+  }
+  seleccionarPaciente(paciente: any) {
     this.selectedPaciente = paciente;
+    this.mostrarSeleccionEspecialistas = true;
+    this.mostrarSeleccionPaciente=false
   }
 
+
+  async loadPacientes() {
+    try {
+      this.spinner.show();
+      const users = await this.dataService.traerColeccion<any>('user');
+      this.pacientes = users.filter(user => user.rol === 'paciente');
+    } catch (error) {
+      console.log("Error loading patients:", error);
+    } finally {
+      this.spinner.hide();
+    }
+  }
   loadDiasDisponibles() {
     if (this.selectedEspecialista) {
       const disponibilidad = this.selectedEspecialista.disponibilidad;
       this.diasDisponibles = Object.keys(disponibilidad);
     }
   }
-
   seleccionarDia(dia: string) {
     this.selectedDia = dia;
     this.selectedFecha = null;
@@ -135,11 +163,13 @@ export default class SolicitarTurnoComponent implements OnInit {
 
   async loadTurnosDisponibles() {
     if (this.selectedEspecialista && this.selectedFecha) {
+      this.spinner.show();
       const dia = this.selectedDia;
       const disponibilidad = this.selectedEspecialista.disponibilidad[dia];
 
       if (!disponibilidad) {
         this.turnosDisponibles = [];
+        this.spinner.hide();
         return;
       }
 
@@ -149,7 +179,7 @@ export default class SolicitarTurnoComponent implements OnInit {
 
       const turnos = [];
 
-      disponibilidad.forEach(rango => {
+      for (const rango of disponibilidad) {
         const inicio = this.parseTime(rango.desde);
         const fin = this.parseTime(rango.hasta);
         let currentTime = inicio;
@@ -157,14 +187,21 @@ export default class SolicitarTurnoComponent implements OnInit {
         while (currentTime < fin) {
           const siguiente = new Date(currentTime.getTime() + 30 * 60000); // 30 minutos
 
-          if (!esHoy || currentTime > hoy) {
+          const turnoDisponible = await this.dataService.verificarDisponibilidadTurno(
+            'turnos',
+            this.selectedFecha,
+            this.formatTime(currentTime),
+            this.formatTime(siguiente)
+          );
+
+          if (turnoDisponible && (!esHoy || currentTime > hoy)) {
             turnos.push({ desde: this.formatTime(currentTime), hasta: this.formatTime(siguiente) });
           }
 
           currentTime = siguiente;
         }
-      });
-
+      }
+      this.spinner.hide();
       this.turnosDisponibles = turnos;
     }
   }
@@ -187,23 +224,49 @@ export default class SolicitarTurnoComponent implements OnInit {
   async solicitarTurno() {
     if (this.selectedEspecialista && this.selectedEspecialidad && this.selectedDia && this.selectedFecha && this.selectedHora) {
       let idUsuarioRegistro;
+      let nombrePaciente;
 
       if (this.esAdministrador && this.selectedPaciente) {
         idUsuarioRegistro = this.selectedPaciente.uid;
+        nombrePaciente = this.selectedPaciente.nombre;
       } else {
         idUsuarioRegistro = this.auth.UsuarioEnSesion.uid;
+        nombrePaciente = this.auth.UsuarioEnSesion.nombre;
       }
 
       const turno: Turnos = {
-        paciente: idUsuarioRegistro,
+        idPaciente: idUsuarioRegistro,
+        nombrePaciente: nombrePaciente,
         especialidad: this.selectedEspecialidad,
-        especialista: this.selectedEspecialista.uid,
+        idEspecialista: this.selectedEspecialista.uid,
+        nombreEspecialista: this.selectedEspecialista.nombre,
         horarioFechaTurno: {
           fecha: this.selectedFecha,
           desde: this.selectedHora.desde,
           hasta: this.selectedHora.hasta
         },
-        estadoTurno: "pendiente"
+        estadoTurno: "Pendiente",
+        resena: "",
+        encuesta: {
+          experienciaHospital: "",
+          recomendarHospital: false,
+          comentario: "",
+          seRealizoEncuesta: false
+        },
+        calificacion: {
+          puntuacion: 0,
+          comentarioFin: "",
+          seCalifico: false,
+        },
+        historial:{
+          altura:0,
+          peso:0,
+          temperatura:0,
+          presion:0,
+          datosDinamicos:[],
+          comentario:"",
+          seHizoHistorial:false
+        }
       };
 
       try {
@@ -222,6 +285,9 @@ export default class SolicitarTurnoComponent implements OnInit {
       }
     }
   }
+
+
+
   resetSelections() {
     this.selectedEspecialista = null;
     this.selectedEspecialidad = null;
@@ -232,16 +298,24 @@ export default class SolicitarTurnoComponent implements OnInit {
     this.selectedFecha = null;
     this.selectedHora = null;
     this.selectedPaciente = null;
-  }
-
-  volverAEspecialidades() {
-    this.resetSelections();
+    this.mostrarSeleccionEspecialistas = true;
+    this.mostrarSeleccionEspecialidad = false;
+    this.mostrarSeleccionDiaFechaHora = false;
   }
 
   volverAEspecialistas() {
-    this.selectedEspecialista = null;
-    this.selectedDia = null;
-    this.selectedFecha = null;
-    this.selectedHora = null;
+    if(this.auth.UsuarioEnSesion.rol==='admin'){
+      this.resetSelections();
+      this.mostrarSeleccionPaciente = true;
+      this.mostrarSeleccionEspecialistas=false;
+    }
+    else if(this.auth.UsuarioEnSesion.rol==='paciente'){
+      this.resetSelections();
+      this.mostrarSeleccionEspecialistas = true;
+
+    }
+  }
+  handleImageError(event: any) {
+    event.target.src = "assets/imagesEspecialidades/sinfoto.png";
   }
 }

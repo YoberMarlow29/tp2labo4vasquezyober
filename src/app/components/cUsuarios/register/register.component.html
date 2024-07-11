@@ -8,8 +8,8 @@
   </div>
   <button class="btn btn-secondary" *ngIf="esPaciente || esEspecialista" (click)="goBack()">Atrás</button>
 
-   <!-- Formulario de Registro de Paciente -->
-   <section *ngIf="esPaciente" class="vh-100 gradient-custom">
+  <!-- Formulario de Registro de Paciente -->
+  <section *ngIf="esPaciente" class="vh-100 gradient-custom">
     <div class="container-fluid py-5 h-100">
       <div class="row justify-content-center align-items-center h-100">
         <div class="col-12">
@@ -96,8 +96,13 @@
                   </div>
                 </div>
 
+                <!-- reCAPTCHA para Paciente -->
+                <div class="text-center mb-4" [ngClass]="{'captcha-completed': captchaResuelto}">
+                  <re-captcha (resolved)="resolved($event)" siteKey="6LdVDwwqAAAAAAOp3v0kxFH0sUrufLJAmEmXOSBw"></re-captcha>
+                </div>
+
                 <div class="mt-4 pt-2">
-                  <button class="btn btn-primary btn-lg" type="submit" [disabled]="pacienteForm.invalid">Registrarse</button>
+                  <button class="btn btn-primary btn-lg" type="submit" [disabled]="pacienteForm.invalid || !captchaResuelto">Registrarse</button>
                 </div>
               </form>
             </div>
@@ -209,8 +214,14 @@
                   </div>
                 </div>
 
+
+                <!-- reCAPTCHA para Especialista -->
+                <div class="text-center mb-4" [ngClass]="{'captcha-completed': captchaResuelto}">
+                  <re-captcha (resolved)="resolved($event)" siteKey="6LdVDwwqAAAAAAOp3v0kxFH0sUrufLJAmEmXOSBw"></re-captcha>
+                </div>
+
                 <div class="mt-4 pt-2">
-                  <button class="btn btn-primary btn-lg" type="submit" [disabled]="especialistaForm.invalid">Registrarse</button>
+                  <button class="btn btn-primary btn-lg" type="submit" [disabled]="especialistaForm.invalid || !captchaResuelto">Registrarse</button>
                 </div>
               </form>
             </div>
@@ -219,6 +230,4 @@
       </div>
     </div>
   </section>
-
-
 </div>

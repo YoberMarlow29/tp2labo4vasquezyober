@@ -13,13 +13,12 @@ import { Usuario } from '../../models/Usuario';
   styleUrl: './navbar.component.css'
 })
 export class NavbarComponent implements OnInit {
-  userLogged: Usuario | null = null;
+  userLogged: Usuario  = null;
   userAdmin: boolean = false;
 
   constructor(
     private auth: AuthService,
     private data: DataService,
-    private route:Router
   ) {}
 
   ngOnInit(): void {
@@ -47,7 +46,6 @@ export class NavbarComponent implements OnInit {
     this.userLogged = null;
     this.userAdmin = false;
   }
-
 
   async verUsuario() {
     const user = await this.auth.currentUser();

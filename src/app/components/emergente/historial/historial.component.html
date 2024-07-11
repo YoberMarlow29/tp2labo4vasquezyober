@@ -1,0 +1,76 @@
+<div class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">Historial Clínico</h5>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="historialForm" (ngSubmit)="enviarEncuesta()">
+        <div class="input-group">
+          <div class="form-group">
+            <label>Altura: </label>
+            <input type="number" formControlName="altura" placeholder="cm" class="form-control">
+            <div *ngIf="historialForm.get('altura').invalid && historialForm.get('altura').touched" class="error">
+              Altura debe estar entre 40 y 220 cm.
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Peso: </label>
+            <input type="number" formControlName="peso" placeholder="kg" class="form-control">
+            <div *ngIf="historialForm.get('peso').invalid && historialForm.get('peso').touched" class="error">
+              Peso debe estar entre 2 y 300 kg.
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Temperatura: </label>
+            <input type="number" formControlName="temperatura" placeholder="°C" class="form-control">
+            <div *ngIf="historialForm.get('temperatura').invalid && historialForm.get('temperatura').touched" class="error">
+              Temperatura debe estar entre 35 y 45 °C.
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Presión: </label>
+            <input type="number" formControlName="presion" placeholder="PA" class="form-control">
+            <div *ngIf="historialForm.get('presion').invalid && historialForm.get('presion').touched" class="error">
+              Presión debe estar entre 40 y 200 PA.
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <button type="button" (click)="agregarDatosDinamico()" class="btn btn-success" [disabled]="datosDinamicos.length >= 3">
+            Agregar Información Adicional
+          </button>
+        </div>
+
+        <div formArrayName="datosDinamicos">
+          <div *ngFor="let dato of datosDinamicos.controls; let i = index;" [formGroupName]="i" class="input-group">
+            <div class="form-group">
+              <label>{{i + 1}}. Clave: </label>
+              <input type="text" formControlName="clave" class="form-control">
+            </div>
+            <div class="form-group">
+              <label>Valor: </label>
+              <input type="text" formControlName="valor" class="form-control">
+            </div>
+            <button type="button" (click)="eliminarDatosDinamico(i)" class="btn btn-danger">Eliminar</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Comentario:</label>
+          <textarea formControlName="comentario" class="form-control"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Estos seran los nuevos datos a agregar:</label>
+          <p>{{ datosDinamicos.value | formatearDatosDinamicos }}</p>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="historialCompletado.emit(null)">Cerrar</button>
+          <button type="submit" class="btn btn-primary" [disabled]="historialForm.invalid">Enviar Encuesta</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

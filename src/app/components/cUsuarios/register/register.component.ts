@@ -7,11 +7,13 @@ import { StorageService } from '../../../services/storage.service';
 import { Especialidad } from '../../../models/Interfaces';
 import { Paciente } from '../../../models/Paciente';
 import { Especialista } from '../../../models/Especialista';
+import { RecaptchaModule } from 'ng-recaptcha';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule,ReactiveFormsModule],
+  imports: [CommonModule,ReactiveFormsModule,RecaptchaModule],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
@@ -29,12 +31,16 @@ export default class RegisterComponent {
   profileImages: File[] = [];
   imagePreviews: string[] = [];
 
+  captchaResuelto: boolean = false; // Variable para controlar si el reCAPTCHA ha sido resuelto
+
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
     private dataService: DataService,
-    private storageService: StorageService
+    private storageService: StorageService,
+    private spinner : NgxSpinnerService,
   ) {
+
     this.loadEspecialidades();
     this.pacienteForm = this.fb.group({
       nombre: ['', Validators.required],
@@ -59,6 +65,10 @@ export default class RegisterComponent {
     });
   }
 
+
+  resolved(captchaResponse: string) {
+    this.captchaResuelto = !!captchaResponse;
+  }
   async loadEspecialidades() {
     try {
       this.especialidades = await this.dataService.traerColeccion<Especialidad>('especialidades', "nombre");
@@ -109,63 +119,84 @@ export default class RegisterComponent {
   }
 
   async registerPaciente() {
-    if (this.pacienteForm.invalid) return;
+    try {
+      if (this.pacienteForm.invalid) return;
 
-    const formData = this.pacienteForm.value;
-    const paciente = new Paciente(
-      '',
-      formData.nombre,
-      formData.apellido,
-      parseInt(formData.edad, 10),
-      formData.dni.replace(/-/g, ''),
-      [],
-      formData.email,
-      formData.password,
-      formData.obraSocial
-    );
+      const formData = this.pacienteForm.value;
+      const paciente = new Paciente(
+        '',
+        formData.nombre,
+        formData.apellido,
+        parseInt(formData.edad, 10),
+        formData.dni.replace(/-/g, ''),
+        [],
+        formData.email,
+        formData.password,
+        formData.obraSocial
+      );
 
-    const imageUrls = await this.uploadProfileImages(`pacientes/${formData.email}`);
-    paciente.pathFoto = imageUrls;
+      this.spinner.show();
+      const imageUrls = await this.uploadProfileImages(`pacientes/${formData.email}`);
+      paciente.pathFoto = imageUrls;
+      const userCredential = await this.authService.registrarFireAuth("user", paciente, formData.password);
+      paciente.uid = userCredential.user.uid;
 
-    const userCredential = await this.authService.registrarFireAuth("user", paciente, formData.password);
-    paciente.uid = userCredential.user.uid;
-    this.authService.logout();
-    this.borrarDatos();
+      // Ocultar spinner solo después de completar la operación
+      this.spinner.hide();
+
+      // Realizar otras operaciones si es necesario
+      this.authService.logout();
+      this.borrarDatos();
+    } catch (error) {
+      console.error('Error al registrar paciente:', error);
+      this.spinner.hide(); // Asegúrate de ocultar el spinner en caso de error
+      // Manejar el error adecuadamente, por ejemplo, mostrar un mensaje al usuario
+    }
   }
 
   async registerEspecialista() {
-    if (this.especialistaForm.invalid) return;
+    try {
+      if (this.especialistaForm.invalid) return;
 
-    const formData = this.especialistaForm.value;
+      const formData = this.especialistaForm.value;
 
-    if (this.agregarEspecialidad) {
-      await this.addEspecialidad({ nombre: formData.nuevaEspecialidad });
-      formData.especialidad.push(formData.nuevaEspecialidad);
+      if (this.agregarEspecialidad) {
+        await this.addEspecialidad({ nombre: formData.nuevaEspecialidad });
+        formData.especialidad.push(formData.nuevaEspecialidad);
+      }
+
+      const especialista = new Especialista(
+        '',
+        formData.nombre,
+        formData.apellido,
+        parseInt(formData.edad, 10),
+        formData.dni.replace(/-/g, ''),
+        [],
+        formData.email,
+        formData.password,
+        formData.especialidad,
+        false
+      );
+
+      this.spinner.show();
+
+      const imageUrls = await this.uploadProfileImages(`especialistas/${formData.email}`);
+      especialista.pathFoto = imageUrls;
+      const userCredential = await this.authService.registrarFireAuth("user", especialista, formData.password);
+      especialista.uid = userCredential.user.uid;
+
+      // Ocultar spinner solo después de completar la operación
+      this.spinner.hide();
+
+      // Realizar otras operaciones si es necesario
+      this.authService.logout();
+      this.borrarDatos();
+    } catch (error) {
+      console.error('Error al registrar especialista:', error);
+      this.spinner.hide(); // Asegúrate de ocultar el spinner en caso de error
+      // Manejar el error adecuadamente, por ejemplo, mostrar un mensaje al usuario
     }
-
-    const especialista = new Especialista(
-      '',
-      formData.nombre,
-      formData.apellido,
-      parseInt(formData.edad, 10),
-      formData.dni.replace(/-/g, ''),
-      [],
-      formData.email,
-      formData.password,
-      formData.especialidad,
-      false
-    );
-
-    const imageUrls = await this.uploadProfileImages(`especialistas/${formData.email}`);
-    especialista.pathFoto = imageUrls;
-
-    const userCredential = await this.authService.registrarFireAuth("user", especialista, formData.password);
-    especialista.uid = userCredential.user.uid;
-    this.authService.logout();
-
-    this.borrarDatos();
   }
-
   async addEspecialidad(nuevaEspecialidad: Especialidad) {
     try {
       await this.dataService.subirDocNoUsuarios('especialidades', nuevaEspecialidad);

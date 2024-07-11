@@ -1,7 +1,6 @@
 /* Estilos para tarjetas de especialidad, especialista y paciente */
 .especialidad-card, .especialista-card {
   height: 250px; /* Altura fija para todas las tarjetas */
-  flex-grow: 1; /* Ocupar todo el espacio disponible */
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -107,4 +106,39 @@
   transform: scale(0.95);
 }
 
-/* Estilos adicionales según necesidades */
+/* Asegurar que las tarjetas se distribuyan uniformemente en el contenedor */
+.row-cols-1 .col, .row-cols-md-4 .col {
+  flex: 1 0 21%; /* Ajuste flexible para asegurar el tamaño uniforme */
+  max-width: 21%; /* Limitar el ancho máximo */
+  margin: 10px; /* Espacio entre tarjetas */
+}
+
+/* Asegurar que todas las filas tengan una altura mínima */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.row .col {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.especialidad-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+}
+
+.especialidad-img {
+  width: 100px; /* Ajusta el tamaño según tus necesidades */
+  height: 100px; /* Ajusta el tamaño según tus necesidades */
+  border-radius: 50%;
+  border: 2px solid black; /* Contorno negro */
+}
+
+.especialidad-label {
+  margin-top: 10px; /* Espacio entre la imagen y el nombre */
+  text-align: center;
+}

@@ -1,0 +1,37 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h5 class="modal-title">Encuesta de Satisfacción</h5>
+  </div>
+  <div class="modal-body">
+    <div>
+      <label>Experiencia en el Hospital:</label>
+      <div>
+        <label>
+          <input type="radio" name="experienciaHospital" [(ngModel)]="experienciaHospital" [value]="'Excelente'"> Excelente
+        </label>
+        <label>
+          <input type="radio" name="experienciaHospital" [(ngModel)]="experienciaHospital" [value]="'Bueno'"> Bueno
+        </label>
+        <label>
+          <input type="radio" name="experienciaHospital" [(ngModel)]="experienciaHospital" [value]="'Malo'"> Malo
+        </label>
+      </div>
+    </div>
+    <div>
+      <label>¿Recomendaría el Hospital?</label>
+      <div>
+        <label>
+          <input type="checkbox" [(ngModel)]="recomendarHospital"> Sí
+        </label>
+      </div>
+    </div>
+    <div *ngIf="recomendarHospital">
+      <label>Comentario:</label>
+      <textarea [(ngModel)]="comentario" class="form-control"></textarea>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="encuestaCompletada.emit(null)">Cerrar</button>
+    <button type="button" class="btn btn-primary" (click)="enviarEncuesta()">Enviar Encuesta</button>
+  </div>
+</div>

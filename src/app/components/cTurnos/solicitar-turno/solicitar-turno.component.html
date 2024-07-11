@@ -1,54 +1,32 @@
 <div class="container mt-4">
   <div class="row justify-content-center">
-    <!-- Sección de selección de pacientes (solo para administradores) -->
-    <div *ngIf="esAdministrador && !selectedPaciente" class="col-md-15">
-      <div class="card mb-4">
-        <div class="card-body">
-          <h3 class="card-title text-center">Seleccionar Paciente</h3>
-          <div class="row">
-            <div class="col-6 col-sm-4 col-md-3 mb-3" *ngFor="let paciente of pacientes">
-              <div class="card h-100 text-center " (click)="seleccionarPaciente(paciente)">
-                <img [src]="paciente.pathFoto[0]" class="card-img-top rounded-circle img-fluid p-2" alt="Foto del Paciente">
-                <div class="card-body">
-                  <h5 class="card-title">{{ paciente.nombre }}</h5>
-                </div>
+  <!-- Sección de selección de pacientes (solo para administradores) -->
+  <div *ngIf="esAdministrador && mostrarSeleccionPaciente" class="col-md-15">
+    <div class="card mb-4">
+      <div class="card-body">
+        <h3 class="card-title text-center">Seleccionar Paciente</h3>
+        <div class="row row-cols-1 row-cols-md-4">
+          <div class="col mb-3" *ngFor="let paciente of pacientes">
+            <div class="card h-100 text-center" (click)="seleccionarPaciente(paciente)">
+              <img [src]="paciente.pathFoto[0]" class="card-img-top rounded-circle img-fluid p-2" alt="Foto del Paciente">
+              <div class="card-body">
+                <h5 class="card-title">{{ paciente.nombre }}</h5>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-
-<!-- Sección de selección de especialidad -->
-<div *ngIf="(!esAdministrador || selectedPaciente) && !selectedEspecialidad" class="col-md-15">
-  <div class="card mb-4 ">
-    <div class="card-body">
-      <h3 class="card-title text-center">Selecciona una especialidad</h3>
-      <div class="row">
-        <div class="col-6 col-sm-4 col-md-3 mb-3" *ngFor="let especialidad of especialidades">
-          <div class="card h-100 text-center " (click)="seleccionarEspecialidad(especialidad)">
-            <img [src]="'assets/imagesEspecialidades/' + (especialidad.nombre || 'sinfoto') + '.png'" class="card-img-top img-fluid p-2" alt="{{ especialidad.nombre }}">
-            <div class="card-body">
-              <h5 class="card-title">{{ especialidad.nombre }}</h5>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
-</div>
 
-    <!-- Sección de selección de especialista -->
-    <div *ngIf="selectedEspecialidad && !selectedEspecialista" class="col-md-15">
-      <button class="btn btn-secondary mb-3" (click)="volverAEspecialidades()">Volver a Especialidades</button>
+    <!-- Sección de selección de especialistas -->
+    <div *ngIf="(esAdministrador && selectedPaciente && mostrarSeleccionEspecialistas) || mostrarSeleccionEspecialistas" class="col-md-15">
       <div class="card mb-4">
         <div class="card-body">
           <h3 class="card-title text-center">Selecciona un especialista</h3>
-          <div class="row">
-            <div class="col-6 col-sm-4 col-md-3 mb-3" *ngFor="let especialista of especialistas">
-              <div class="card h-100 text-center "
-                   (click)="seleccionarEspecialista(especialista)"
-                   [class.button-pressed]="especialista === selectedEspecialista">
+          <div class="row row-cols-1 row-cols-md-4">
+            <div class="col mb-3" *ngFor="let especialista of especialistas">
+              <div class="card h-100 text-center" (click)="seleccionarEspecialista(especialista)" [class.button-pressed]="especialista === selectedEspecialista">
                 <img [src]="especialista.pathFoto[0]" class="card-img-top rounded-circle img-fluid p-2" alt="Foto del Especialista">
                 <div class="card-body">
                   <h5 class="card-title">{{ especialista.nombre }}</h5>
@@ -59,9 +37,31 @@
         </div>
       </div>
     </div>
+<!-- Sección de selección de especialidad -->
+<div *ngIf="selectedEspecialista && mostrarSeleccionEspecialidad" class="col-md-15">
+  <div class="card mb-4">
+    <div class="card-body">
+      <h3 class="card-title text-center">Selecciona una especialidad</h3>
+      <div class="row row-cols-1 row-cols-md-4 justify-content-center">
+        <div class="col mb-3" *ngFor="let especialidad of especialidades">
+          <div class="especialidad-container" (click)="seleccionarEspecialidad(especialidad)">
+            <img [src]="'assets/imagesEspecialidades/' + especialidad.nombre  + '.png'"
+                 class="rounded-circle especialidad-img"
+                 alt="{{ especialidad.nombre }}"
+                 (error)="handleImageError($event)">
+            <div class="especialidad-label">
+              <h5 class="text-center">{{ especialidad.nombre }}</h5>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 
     <!-- Sección de selección de día, fecha y turno -->
-    <div *ngIf="selectedEspecialista" class="col-md-15">
+    <div *ngIf="selectedEspecialista && selectedEspecialidad && mostrarSeleccionDiaFechaHora" class="col-md-15">
       <button class="btn btn-secondary mb-3" (click)="volverAEspecialistas()">Volver a Especialistas</button>
       <div class="card mb-4">
         <div class="card-body">

@@ -98,3 +98,8 @@ section {
   width: 100%;
   padding: 10px;
 }
+.icon-button {
+  width: 70px;
+  height: 70px;
+  cursor: pointer;
+}

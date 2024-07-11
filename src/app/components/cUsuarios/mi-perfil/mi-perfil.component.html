@@ -1,10 +1,15 @@
-<section class="bg-light">
+<!-- Sección de perfil -->
+<section *ngIf="!seEntroAlHistorial && !seEntroAlHorario" class="bg-light">
   <div class="container">
     <div class="row">
       <div class="col-lg-12 mb-4 mb-sm-5">
         <div class="card card-style1 border-0">
           <div class="card-body p-1-9 p-sm-2-3 p-md-6 p-lg-7">
-            <div class="row align-items-center" *ngIf="usuario">
+            <img *ngIf="esPaciente || esEspecialista"
+            [src]="usuario.rol === 'paciente' ? 'assets/botones/cuaderno.png' : 'assets/botones/calendario.png'"
+            class="icon-button" alt="Ir a mi sección"
+            [appToolTip]="usuario.rol === 'paciente' ? 'Ir a mi historial' : 'Ir a calendario'" (click)="irASeccion()">
+            <div class="row align-items-center">
               <div class="col-lg-6 mb-4 mb-lg-0 text-center">
                 <img [src]="usuario.pathFoto[0]" class="profile-image" alt="Imagen de Perfil">
               </div>
@@ -24,36 +29,115 @@
                     <span class="display-26 text-secondary me-2 font-weight-600">Email:</span> {{ usuario.email }}
                   </li>
                 </ul>
-                <button (click)="logout()" class="btn btn-primary mt-3">Cerrar sesión</button>
+                <button (click)="logout()" class="btn btn-danger mt-3">Cerrar sesión</button>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Sección historial paciente -->
+<section *ngIf="seEntroAlHistorial && turnosConHistorial.length > 0" class="bg-light">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 mb-4 mb-sm-5">
+        <div class="card card-style1 border-0">
+          <div class="card-body p-1-9">
+            <h5 class="mb-4">Historial Clínico</h5>
+            <button (click)="volverAtras()" class="btn btn-secondary mb-3">Volver atrás</button>
+
+            <div class="form-group">
+              <label for="especialidadSelect">Seleccionar especialidad:</label>
+              <select id="especialidadSelect" class="form-control" [(ngModel)]="especialidadElegida">
+                <option value="">Todas las especialidades</option>
+                <option *ngFor="let especialidad of obtenerEspecialidadesUnicas()" [ngValue]="especialidad">{{ especialidad }}</option>
+              </select>
+            </div>
+            <div class="text-center">
+              <button class="btn btn-primary" (click)="descargarPDF(especialidadElegida)" *ngIf="especialidadElegida || especialidadElegida === ''">Descargar PDF</button>
+            </div>
             <hr>
-            <div *ngIf="usuario?.rol === 'especialista'">
-              <h4>Disponibilidad:</h4>
-              <div class="row">
-                <div *ngFor="let dia of ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']" class="col-2 mb-3">
-                  <button class="btn btn-info w-100" (click)="agregarHorario(dia)">
-                    {{ dia }}
-                  </button>
-                  <div *ngIf="horarios[dia]" class="mt-2">
-                    <div *ngFor="let horario of horarios[dia]; let i = index">
-                      <label>Desde:
-                        <select [(ngModel)]="horario.desde">
-                          <option *ngFor="let hora of getHorasInicioDisponibles(dia, i)" [value]="hora">{{ hora }}</option>
-                        </select>
-                      </label>
-                      <label>Hasta:
-                        <select [(ngModel)]="horario.hasta">
-                          <option *ngFor="let hora of getHorasFinDisponibles(dia, i)" [value]="hora">{{ hora }}</option>
-                        </select>
-                      </label>
-                      <button class="btn btn-danger btn-sm" (click)="eliminarHorario(dia)">Eliminar</button>
-                    </div>
+            <div class="table-responsive">
+              <table class="table table-bordered">
+                <thead class="table-primary">
+                  <tr>
+                    <th>Especialidad</th>
+                    <th>Especialista</th>
+                    <th>Fecha</th>
+                    <th>Hora</th>
+                    <th>Altura (cm)</th>
+                    <th>Peso (kg)</th>
+                    <th>Temperatura (°C)</th>
+                    <th>Presión</th>
+                    <th>Comentario</th>
+                    <th>Datos adicionales</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let turno of turnosConHistorial | filterBy: 'especialidad': especialidadElegida">
+                    <td>{{ turno.especialidad }}</td>
+                    <td>{{ turno.nombreEspecialista }}</td>
+                    <td>{{ turno.horarioFechaTurno.fecha }}</td>
+                    <td>{{ turno.horarioFechaTurno.desde }} - {{ turno.horarioFechaTurno.hasta }}</td>
+                    <td>{{ turno.historial?.altura }}</td>
+                    <td>{{ turno.historial?.peso }}</td>
+                    <td>{{ turno.historial?.temperatura }}</td>
+                    <td>{{ turno.historial?.presion }}</td>
+                    <td>{{ turno.historial?.comentario }}</td>
+                    <td>
+                      <ul class="list-unstyled">
+                        <li *ngFor="let dato of turno.historial?.datosDinamicos">
+                          {{ dato.clave }}: {{ dato.valor }}
+                        </li>
+                      </ul>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Sección calendario especialista -->
+<section *ngIf="seEntroAlHorario" class="bg-light">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 mb-4 mb-sm-5">
+        <div class="card card-style1 border-0">
+          <div class="card-body p-1-9 p-sm-2-3 p-md-6 p-lg-7">
+            <button (click)="volverAtras()" class="btn btn-secondary mb-3">Volver atrás</button>
+            <hr>
+            <h4>Disponibilidad:</h4>
+            <div class="row">
+              <div *ngFor="let dia of ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']" class="col-2 mb-3">
+                <button class="btn btn-info w-100" (click)="agregarHorario(dia)">
+                  {{ dia }}
+                </button>
+                <div *ngIf="horarios[dia]" class="mt-2">
+                  <div *ngFor="let horario of horarios[dia]; let i = index">
+                    <label>Desde:
+                      <select [(ngModel)]="horario.desde">
+                        <option *ngFor="let hora of getHorasInicioDisponibles(dia, i)" [value]="hora">{{ hora }}</option>
+                      </select>
+                    </label>
+                    <label>Hasta:
+                      <select [(ngModel)]="horario.hasta">
+                        <option *ngFor="let hora of getHorasFinDisponibles(dia, i)" [value]="hora">{{ hora }}</option>
+                      </select>
+                    </label>
+                    <button class="btn btn-danger btn-sm" (click)="eliminarHorario(dia)">Eliminar</button>
                   </div>
                 </div>
               </div>
-              <button (click)="guardarDisponibilidad()" class="btn btn-success mt-3">Guardar Disponibilidad</button>
             </div>
+            <button (click)="guardarDisponibilidad()" class="btn btn-success mt-3">Guardar Disponibilidad</button>
           </div>
         </div>
       </div>

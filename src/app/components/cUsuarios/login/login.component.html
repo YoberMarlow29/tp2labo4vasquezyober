@@ -17,7 +17,7 @@
       <div class="card shadow">
         <div class="card-body">
           <h3 class="card-title text-center mb-4">Iniciar Sesión</h3>
-          <form (ngSubmit)="login()">
+          <form (ngSubmit)="login()" appEnterClick>
             <div class="mb-3">
               <label for="email" class="form-label">Correo Electrónico</label>
               <input type="email" class="form-control" id="email" name="email" [(ngModel)]="email" required>

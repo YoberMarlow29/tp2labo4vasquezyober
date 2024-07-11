@@ -21,12 +21,13 @@ export const routes: Routes = [
   },
   {
     path: 'home', loadComponent: () => import('./components/home/home.component'),
-       canActivate: [pacienteAceptado]
 
   },
   {
     path: 'seccionadmin', loadComponent: () => import('./components/cAdmin/seccion-admin/seccion-admin.component'),
-       canActivate: [esAdminGuard]
+       canActivate: [esAdminGuard],
+       ...canActivate(()=> redirectUnauthorizedTo(['/home'])),
+
 
   },
   {
@@ -35,13 +36,33 @@ export const routes: Routes = [
   },
   {
     path: 'miperfil', loadComponent: () => import('./components/cUsuarios/mi-perfil/mi-perfil.component'),
-
+     ...canActivate(()=> redirectUnauthorizedTo(['/home'])),
 
   },
   {
     path: 'sacarturno', loadComponent: () => import('./components/cTurnos/solicitar-turno/solicitar-turno.component'),
-    ...canActivate(()=> redirectLoggedInTo(['/home'])),
+    ...canActivate(()=> redirectUnauthorizedTo(['/home'])),
     canActivate: [noEspecialistaGuard]
+
+  },
+  {
+    path: 'misturnos', loadComponent: () => import('./components/cTurnos/mis-turnos/mis-turnos.component'),
+    ...canActivate(()=> redirectUnauthorizedTo(['/home'])),
+
+  },
+  {
+    path: 'pacientes', loadComponent: () => import('./components/pacientes/pacientes.component'),
+
+  },
+  {
+    path: 'usuarios', loadComponent: () => import('./components/cAdmin/usuarios/usuarios.component'),
+    canActivate: [esAdminGuard],
+
+
+  },
+  {
+    path: 'estadisticas', loadComponent: () => import('./components/cAdmin/estadisticas/estadisticas.component'),
+    canActivate: [esAdminGuard],
 
   },
 
