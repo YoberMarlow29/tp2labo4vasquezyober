@@ -1,21 +1,24 @@
-<div class="container card">
-  <div>
-    <button (click)="descargarExcelTodosLosUsuarios()">Descargar excel de todos los usuarios</button>
-  </div>
-  <div class="row row-cols-1 row-cols-md-4">
-    <div *ngFor="let usuario of listaUsuariosCards" class="col mb-4">
-      <div class="card">
-        <img [src]="usuario.pathFoto[0]" class="card-img-top rounded-circle img-fluid p-2">
-        <div class="card-body">
-          <h5 class="card-title">{{ usuario.nombre }} {{ usuario.apellido }}</h5>
-          <div class="card">
-            <div class="card-body">
-              <p>DNI: {{ usuario.dni }}</p>
-              <p>EDAD: {{ usuario.edad }}</p>
-              <p>EMAIL: {{ usuario.email }}</p>
+
+<div class="slide-in-bottom">
+  <div class="container card">
+    <div>
+      <button (click)="descargarExcelTodosLosUsuarios()">Descargar excel de todos los usuarios</button>
+    </div>
+    <div class="row row-cols-1 row-cols-md-4">
+      <div *ngFor="let usuario of listaUsuariosCards" class="col mb-4">
+        <div class="card">
+          <img [src]="usuario.pathFoto[0]" class="card-img-top rounded-circle img-fluid p-2">
+          <div class="card-body">
+            <h5 class="card-title">{{ usuario.nombre }} {{ usuario.apellido }}</h5>
+            <div class="card">
+              <div class="card-body">
+                <p>DNI: {{ usuario.dni }}</p>
+                <p>EDAD: {{ usuario.edad }}</p>
+                <p>EMAIL: {{ usuario.email }}</p>
+              </div>
             </div>
+            <button (click)="descargarExcelTurnos(usuario)">Descargar Excel</button>
           </div>
-          <button (click)="descargarExcelTurnos(usuario)">Descargar Excel</button>
         </div>
       </div>
     </div>

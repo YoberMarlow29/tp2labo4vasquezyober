@@ -13,14 +13,15 @@ import { logUser } from '../../../models/Interfaces';
   standalone: true,
   imports: [CommonModule,FormsModule,EnterClickDirective],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  styleUrl: './login.component.css',
+
 })
 export default class LoginComponent implements OnInit {
   email: string = '';
   password: string = ''; // Contraseña fija para todos los usuarios
   users: any[] = [
     { role: 'Administrador', id: 'DuxHl2ZoaHRmAoMUVTDoAdWDeYF2' },
-    { role: 'Especialista1', id: '94XwwKtor6ePnqR2HjQF9yuTODp1' },
+    { role: 'Especialista1', id: 'zjvPN1iQpjaQguLaY2TABe54Jog1' },
     { role: 'Especialista2', id: 'ehFSqVuFs6P1edBqL3ia7xGruLo2' },
     { role: 'Paciente1', id: '3Av7dDdz8XRTdl13I4MLytyHomz2' },
     { role: 'Paciente2', id: 'UAwSOLncBkXYabClw6V3YbgUsYQ2' },

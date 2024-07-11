@@ -1,220 +1,223 @@
-<div class="container">
-   <!-- Lista Turnos de Paciente -->
-   <section *ngIf="esPaciente" class="vh-100 gradient-custom">
-    <div class="container-fluid py-5 h-100">
-      <div class="row justify-content-center align-items-center h-100">
-        <div class="col-12">
-          <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
-            <div class="card-body p-4 p-md-5">
-              <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">Sección Paciente</h3>
-              <input type="text" [(ngModel)]="search" placeholder="Buscar por cualquier campo" class="form-control mb-3">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th scope="col">Paciente</th>
-                    <th scope="col">Especialidad</th>
-                    <th scope="col">Especialista</th>
-                    <th scope="col">Fecha y Hora</th>
-                    <th scope="col">Estado</th>
-                    <th scope="col">Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let turno of listaTurnos | filter: search : 'paciente'; let i = index">
-                    <td>{{ turno.nombrePaciente }}</td>
-                    <td>{{ turno.especialidad }}</td>
-                    <td>{{ turno.nombreEspecialista }}</td>
-                    <td>{{ turno.horarioFechaTurno.fecha }} {{ turno.horarioFechaTurno.desde }}</td>
-                    <td><p appEstadoColor [estado]="turno.estadoTurno">{{ turno.estadoTurno }}</p></td>
-                    <td>
-                      <!-- Acciones -->
-                      <button *ngIf="turno.estadoTurno !== 'Finalizado' && turno.estadoTurno !== 'Cancelado'"
-                              (click)="mostrarModalDeCancelar(turno)" class="btn btn-danger">Cancelar</button>
-                      <button *ngIf="turno.resena" (click)="verResena(turno)" class="btn btn-info">Ver Reseña</button>
-                      <button *ngIf="turno.estadoTurno === 'Finalizado' && turno.resena && !turno.encuesta?.seRealizoEncuesta"
-                              (click)="mostrarModalDeEncuesta(turno)" class="btn btn-primary">Completar Encuesta</button>
-                      <button *ngIf="turno.estadoTurno === 'Finalizado' && !turno.calificacion?.seCalifico"
-                              (click)="mostrarModalDeCalificacion(turno)" class="btn btn-warning">Calificar</button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
 
-  <!-- Lista Turnos de Especialista -->
-  <section *ngIf="esEspecialista" class="vh-100 gradient-custom">
-    <div class="container-fluid py-5 h-100">
-      <div class="row justify-content-center align-items-center h-100">
-        <div class="col-12">
-          <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
-            <div class="card-body p-4 p-md-5">
-              <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">Sección Especialista</h3>
-              <input type="text" [(ngModel)]="search" placeholder="Buscar por cualquier campo" class="form-control mb-3">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th scope="col">Paciente</th>
-                    <th scope="col">Especialidad</th>
-                    <th scope="col">Especialista</th>
-                    <th scope="col">Fecha y Hora</th>
-                    <th scope="col">Estado</th>
-                    <th scope="col">Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let turno of listaTurnos | filter: search : 'especialista'; let i = index">
-                    <td>{{ turno.nombrePaciente }}</td>
-                    <td>{{ turno.especialidad }}</td>
-                    <td>{{ turno.nombreEspecialista }}</td>
-                    <td>{{ turno.horarioFechaTurno.fecha }} {{ turno.horarioFechaTurno.desde }}</td>
-                    <td><p appEstadoColor [estado]="turno.estadoTurno">{{ turno.estadoTurno }}</p></td>
-                    <td>
-                      <!-- Acciones -->
-                      <button *ngIf="turno.estadoTurno === 'Aceptado'"
-                              (click)="mostrarModalDeCancelar(turno)" class="btn btn-warning">Cancelar</button>
-                      <button *ngIf="turno.resena" (click)="verResena(turno)" class="btn btn-info">Ver Reseña</button>
-                      <button *ngIf="turno.estadoTurno !== 'Aceptado' && turno.estadoTurno !== 'Finalizado' && turno.estadoTurno !== 'Cancelado' && turno.estadoTurno !== 'Rechazado'"
-                              (click)="mostrarModalDeRechazo(turno)" class="btn btn-danger">Rechazar</button>
-                      <button *ngIf="turno.estadoTurno !== 'Rechazado' && turno.estadoTurno !== 'Finalizado' && turno.estadoTurno !== 'Cancelado' && turno.estadoTurno !== 'Aceptado' "
-                              (click)="aceptarTurno(turno)" class="btn btn-success">Aceptar</button>
-                      <button *ngIf="turno.estadoTurno === 'Aceptado'"
-                              (click)="mostrarModalDeHistorial(turno)" class="btn btn-secondary">Finalizar</button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+<div class="slide-in-top">
+  <div class="container">
+    <!-- Lista Turnos de Paciente -->
+    <section *ngIf="esPaciente" class="vh-100 gradient-custom">
+     <div class="container-fluid py-5 h-100">
+       <div class="row justify-content-center align-items-center h-100">
+         <div class="col-12">
+           <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
+             <div class="card-body p-4 p-md-5">
+               <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">Sección Paciente</h3>
+               <input type="text" [(ngModel)]="search" placeholder="Buscar por cualquier campo" class="form-control mb-3">
+               <table class="table">
+                 <thead>
+                   <tr>
+                     <th scope="col">Paciente</th>
+                     <th scope="col">Especialidad</th>
+                     <th scope="col">Especialista</th>
+                     <th scope="col">Fecha y Hora</th>
+                     <th scope="col">Estado</th>
+                     <th scope="col">Acciones</th>
+                   </tr>
+                 </thead>
+                 <tbody>
+                   <tr *ngFor="let turno of listaTurnos | filter: search : 'paciente'; let i = index">
+                     <td>{{ turno.nombrePaciente }}</td>
+                     <td>{{ turno.especialidad }}</td>
+                     <td>{{ turno.nombreEspecialista }}</td>
+                     <td>{{ turno.horarioFechaTurno.fecha }} {{ turno.horarioFechaTurno.desde }}</td>
+                     <td><p appEstadoColor [estado]="turno.estadoTurno">{{ turno.estadoTurno }}</p></td>
+                     <td>
+                       <!-- Acciones -->
+                       <button *ngIf="turno.estadoTurno !== 'Finalizado' && turno.estadoTurno !== 'Cancelado'"
+                               (click)="mostrarModalDeCancelar(turno)" class="btn btn-danger">Cancelar</button>
+                       <button *ngIf="turno.resena" (click)="verResena(turno)" class="btn btn-info">Ver Reseña</button>
+                       <button *ngIf="turno.estadoTurno === 'Finalizado' && turno.resena && !turno.encuesta?.seRealizoEncuesta"
+                               (click)="mostrarModalDeEncuesta(turno)" class="btn btn-primary">Completar Encuesta</button>
+                       <button *ngIf="turno.estadoTurno === 'Finalizado' && !turno.calificacion?.seCalifico"
+                               (click)="mostrarModalDeCalificacion(turno)" class="btn btn-warning">Calificar</button>
+                     </td>
+                   </tr>
+                 </tbody>
+               </table>
+             </div>
+           </div>
+         </div>
+       </div>
+     </div>
+   </section>
 
-  <!-- Lista Turnos de Admin -->
-  <section *ngIf="esAdmin" class="vh-100 gradient-custom">
-    <div class="container-fluid py-5 h-100">
-      <div class="row justify-content-center align-items-center h-100">
-        <div class="col-12">
-          <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
-            <div class="card-body p-4 p-md-5">
-              <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">Sección Admin</h3>
-              <input type="text" [(ngModel)]="search" placeholder="Buscar por especialidad o especialista" class="form-control mb-3">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th scope="col">Paciente</th>
-                    <th scope="col">Especialidad</th>
-                    <th scope="col">Especialista</th>
-                    <th scope="col">Fecha y Hora</th>
-                    <th scope="col">Estado</th>
-                    <th scope="col">Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let turno of listaTurnos | filter: search : 'admin'; let i = index">
-                    <td>{{ turno.nombrePaciente }}</td>
-                    <td>{{ turno.especialidad }}</td>
-                    <td>{{ turno.nombreEspecialista }}</td>
-                    <td>{{ turno.horarioFechaTurno.fecha }} {{ turno.horarioFechaTurno.desde }}</td>
-                    <td><p appEstadoColor [estado]="turno.estadoTurno">{{ turno.estadoTurno }}</p></td>
-                    <td>
-                      <!-- Acciones -->
-                      <button *ngIf="turno.estadoTurno !== 'Finalizado' && turno.estadoTurno !== 'Cancelado' && turno.estadoTurno !== 'Aceptado'"
-                      (click)="mostrarModalDeCancelar(turno)" class="btn btn-danger">Cancelar</button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+   <!-- Lista Turnos de Especialista -->
+   <section *ngIf="esEspecialista" class="vh-100 gradient-custom">
+     <div class="container-fluid py-5 h-100">
+       <div class="row justify-content-center align-items-center h-100">
+         <div class="col-12">
+           <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
+             <div class="card-body p-4 p-md-5">
+               <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">Sección Especialista</h3>
+               <input type="text" [(ngModel)]="search" placeholder="Buscar por cualquier campo" class="form-control mb-3">
+               <table class="table">
+                 <thead>
+                   <tr>
+                     <th scope="col">Paciente</th>
+                     <th scope="col">Especialidad</th>
+                     <th scope="col">Especialista</th>
+                     <th scope="col">Fecha y Hora</th>
+                     <th scope="col">Estado</th>
+                     <th scope="col">Acciones</th>
+                   </tr>
+                 </thead>
+                 <tbody>
+                   <tr *ngFor="let turno of listaTurnos | filter: search : 'especialista'; let i = index">
+                     <td>{{ turno.nombrePaciente }}</td>
+                     <td>{{ turno.especialidad }}</td>
+                     <td>{{ turno.nombreEspecialista }}</td>
+                     <td>{{ turno.horarioFechaTurno.fecha }} {{ turno.horarioFechaTurno.desde }}</td>
+                     <td><p appEstadoColor [estado]="turno.estadoTurno">{{ turno.estadoTurno }}</p></td>
+                     <td>
+                       <!-- Acciones -->
+                       <button *ngIf="turno.estadoTurno === 'Aceptado'"
+                               (click)="mostrarModalDeCancelar(turno)" class="btn btn-warning">Cancelar</button>
+                       <button *ngIf="turno.resena" (click)="verResena(turno)" class="btn btn-info">Ver Reseña</button>
+                       <button *ngIf="turno.estadoTurno !== 'Aceptado' && turno.estadoTurno !== 'Finalizado' && turno.estadoTurno !== 'Cancelado' && turno.estadoTurno !== 'Rechazado'"
+                               (click)="mostrarModalDeRechazo(turno)" class="btn btn-danger">Rechazar</button>
+                       <button *ngIf="turno.estadoTurno !== 'Rechazado' && turno.estadoTurno !== 'Finalizado' && turno.estadoTurno !== 'Cancelado' && turno.estadoTurno !== 'Aceptado' "
+                               (click)="aceptarTurno(turno)" class="btn btn-success">Aceptar</button>
+                       <button *ngIf="turno.estadoTurno === 'Aceptado'"
+                               (click)="mostrarModalDeHistorial(turno)" class="btn btn-secondary">Finalizar</button>
+                     </td>
+                   </tr>
+                 </tbody>
+               </table>
+             </div>
+           </div>
+         </div>
+       </div>
+     </div>
+   </section>
+
+   <!-- Lista Turnos de Admin -->
+   <section *ngIf="esAdmin" class="vh-100 gradient-custom">
+     <div class="container-fluid py-5 h-100">
+       <div class="row justify-content-center align-items-center h-100">
+         <div class="col-12">
+           <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
+             <div class="card-body p-4 p-md-5">
+               <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">Sección Admin</h3>
+               <input type="text" [(ngModel)]="search" placeholder="Buscar por especialidad o especialista" class="form-control mb-3">
+               <table class="table">
+                 <thead>
+                   <tr>
+                     <th scope="col">Paciente</th>
+                     <th scope="col">Especialidad</th>
+                     <th scope="col">Especialista</th>
+                     <th scope="col">Fecha y Hora</th>
+                     <th scope="col">Estado</th>
+                     <th scope="col">Acciones</th>
+                   </tr>
+                 </thead>
+                 <tbody>
+                   <tr *ngFor="let turno of listaTurnos | filter: search : 'admin'; let i = index">
+                     <td>{{ turno.nombrePaciente }}</td>
+                     <td>{{ turno.especialidad }}</td>
+                     <td>{{ turno.nombreEspecialista }}</td>
+                     <td>{{ turno.horarioFechaTurno.fecha }} {{ turno.horarioFechaTurno.desde }}</td>
+                     <td><p appEstadoColor [estado]="turno.estadoTurno">{{ turno.estadoTurno }}</p></td>
+                     <td>
+                       <!-- Acciones -->
+                       <button *ngIf="turno.estadoTurno !== 'Finalizado' && turno.estadoTurno !== 'Cancelado' && turno.estadoTurno !== 'Aceptado'"
+                       (click)="mostrarModalDeCancelar(turno)" class="btn btn-danger">Cancelar</button>
+                     </td>
+                   </tr>
+                 </tbody>
+               </table>
+             </div>
+           </div>
+         </div>
+       </div>
+     </div>
+   </section>
 
 
-  <!-- Modal para cancelar turno -->
-  <div *ngIf="mostrarModalCancelar" class="modal" tabindex="-1" role="dialog" style="display: block;">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Cancelar Turno</h5>
-        </div>
-        <div class="modal-body">
-          <textarea [(ngModel)]="comentarioCancelacion" class="form-control" rows="3" placeholder="Escriba el motivo de la cancelación"></textarea>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="mostrarModalCancelar = false">Cerrar</button>
-          <button type="button" class="btn btn-primary" (click)="cancelarTurno()">Cancelar Turno</button>
-        </div>
-      </div>
-    </div>
-  </div>
+   <!-- Modal para cancelar turno -->
+   <div *ngIf="mostrarModalCancelar" class="modal" tabindex="-1" role="dialog" style="display: block;">
+     <div class="modal-dialog" role="document">
+       <div class="modal-content">
+         <div class="modal-header">
+           <h5 class="modal-title">Cancelar Turno</h5>
+         </div>
+         <div class="modal-body">
+           <textarea [(ngModel)]="comentarioCancelacion" class="form-control" rows="3" placeholder="Escriba el motivo de la cancelación"></textarea>
+         </div>
+         <div class="modal-footer">
+           <button type="button" class="btn btn-secondary" (click)="mostrarModalCancelar = false">Cerrar</button>
+           <button type="button" class="btn btn-primary" (click)="cancelarTurno()">Cancelar Turno</button>
+         </div>
+       </div>
+     </div>
+   </div>
 
-  <!-- Modal para ver la reseña -->
-  <div *ngIf="mostrarModalResena" class="modal" tabindex="-1" role="dialog" style="display: block;">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Reseña del Turno</h5>
-        </div>
-        <div class="modal-body">
-          <p>{{ turnoSeleccionado?.resena }}</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="mostrarModalResena = false">Cerrar</button>
-        </div>
-      </div>
-    </div>
-  </div>
+   <!-- Modal para ver la reseña -->
+   <div *ngIf="mostrarModalResena" class="modal" tabindex="-1" role="dialog" style="display: block;">
+     <div class="modal-dialog" role="document">
+       <div class="modal-content">
+         <div class="modal-header">
+           <h5 class="modal-title">Reseña del Turno</h5>
+         </div>
+         <div class="modal-body">
+           <p>{{ turnoSeleccionado?.resena }}</p>
+         </div>
+         <div class="modal-footer">
+           <button type="button" class="btn btn-secondary" (click)="mostrarModalResena = false">Cerrar</button>
+         </div>
+       </div>
+     </div>
+   </div>
 
-  <!-- Modal para la encuesta -->
-  <div *ngIf="mostrarModalEncuesta" class="modal" tabindex="-1" role="dialog" style="display: block;">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <app-encuesta [turno]="turnoSeleccionado" (encuestaCompletada)="completarEncuesta($event)"></app-encuesta>
-      </div>
-    </div>
-  </div>
+   <!-- Modal para la encuesta -->
+   <div *ngIf="mostrarModalEncuesta" class="modal" tabindex="-1" role="dialog" style="display: block;">
+     <div class="modal-dialog" role="document">
+       <div class="modal-content">
+         <app-encuesta [turno]="turnoSeleccionado" (encuestaCompletada)="completarEncuesta($event)"></app-encuesta>
+       </div>
+     </div>
+   </div>
 
-  <!-- Modal para la historial -->
-  <div *ngIf="mostrarModalHistorial" class="modal" tabindex="-1" role="dialog" style="display: block;">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <app-historial [turno]="turnoSeleccionado" (historialCompletado)="recibirHistorial($event)"></app-historial>
-      </div>
-    </div>
-  </div>
+   <!-- Modal para la historial -->
+   <div *ngIf="mostrarModalHistorial" class="modal" tabindex="-1" role="dialog" style="display: block;">
+     <div class="modal-dialog" role="document">
+       <div class="modal-content">
+         <app-historial [turno]="turnoSeleccionado" (historialCompletado)="recibirHistorial($event)"></app-historial>
+       </div>
+     </div>
+   </div>
 
-    <!-- Modal para la calificación -->
-    <div *ngIf="mostrarModalCalificacion" class="modal" tabindex="-1" role="dialog" style="display: block;">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <app-calificacion [turno]="turnoSeleccionado" (calificacionCompletada)="recibirCalificacion($event)"></app-calificacion>
-        </div>
-      </div>
-    </div>
+     <!-- Modal para la calificación -->
+     <div *ngIf="mostrarModalCalificacion" class="modal" tabindex="-1" role="dialog" style="display: block;">
+       <div class="modal-dialog" role="document">
+         <div class="modal-content">
+           <app-calificacion [turno]="turnoSeleccionado" (calificacionCompletada)="recibirCalificacion($event)"></app-calificacion>
+         </div>
+       </div>
+     </div>
 
-  <!-- Modal para rechazar turno -->
-  <div *ngIf="mostrarModalRechazo" class="modal" tabindex="-1" role="dialog" style="display: block;">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Rechazar Turno</h5>
-        </div>
-        <div class="modal-body">
-          <textarea [(ngModel)]="comentarioRechazo" class="form-control" rows="3" placeholder="Escriba el motivo del rechazo"></textarea>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="mostrarModalRechazo = false">Cerrar</button>
-          <button type="button" class="btn btn-primary" (click)="rechazarTurno()">Rechazar Turno</button>
-        </div>
-      </div>
-    </div>
-  </div>
+   <!-- Modal para rechazar turno -->
+   <div *ngIf="mostrarModalRechazo" class="modal" tabindex="-1" role="dialog" style="display: block;">
+     <div class="modal-dialog" role="document">
+       <div class="modal-content">
+         <div class="modal-header">
+           <h5 class="modal-title">Rechazar Turno</h5>
+         </div>
+         <div class="modal-body">
+           <textarea [(ngModel)]="comentarioRechazo" class="form-control" rows="3" placeholder="Escriba el motivo del rechazo"></textarea>
+         </div>
+         <div class="modal-footer">
+           <button type="button" class="btn btn-secondary" (click)="mostrarModalRechazo = false">Cerrar</button>
+           <button type="button" class="btn btn-primary" (click)="rechazarTurno()">Rechazar Turno</button>
+         </div>
+       </div>
+     </div>
+   </div>
+ </div>
 </div>
