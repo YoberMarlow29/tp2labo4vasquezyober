@@ -33,7 +33,7 @@
                        <button *ngIf="turno.estadoTurno !== 'Finalizado' && turno.estadoTurno !== 'Cancelado'"
                                (click)="mostrarModalDeCancelar(turno)" class="btn btn-danger">Cancelar</button>
                        <button *ngIf="turno.resena" (click)="verResena(turno)" class="btn btn-info">Ver Reseña</button>
-                       <button *ngIf="turno.estadoTurno === 'Finalizado' && turno.resena && !turno.encuesta?.seRealizoEncuesta"
+                       <button *ngIf="turno.estadoTurno === 'Finalizado' && !turno.encuesta?.seRealizoEncuesta"
                                (click)="mostrarModalDeEncuesta(turno)" class="btn btn-primary">Completar Encuesta</button>
                        <button *ngIf="turno.estadoTurno === 'Finalizado' && !turno.calificacion?.seCalifico"
                                (click)="mostrarModalDeCalificacion(turno)" class="btn btn-warning">Calificar</button>
