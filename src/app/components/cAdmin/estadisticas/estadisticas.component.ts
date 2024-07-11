@@ -6,6 +6,8 @@ import { CommonModule } from '@angular/common';
 import { Chart, registerables } from 'chart.js';
 import { FormsModule } from '@angular/forms';
 Chart.register(...registerables);
+import * as ExcelJS from 'exceljs';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-estadisticas',
@@ -252,6 +254,7 @@ export default class EstadisticasComponent implements OnInit {
       });
     }
   }
+
   renderDoughnutChartDos(labels: string[], values: number[], colors: string[]) {
     const ctx = document.getElementById('doughnutChartDos') as HTMLCanvasElement;
     if (ctx) {
@@ -301,9 +304,54 @@ export default class EstadisticasComponent implements OnInit {
       this.generateDoughnutChartData(this.startDate, this.endDate);
     }
   }
+
   updateDoughnutChartFinalizado() {
     if (this.startDateDos && this.endDateDos) {
       this.generateDoughnutChartDataFinalizado(this.startDateDos, this.endDateDos);
     }
   }
+
+  // Agrega este método en tu componente
+async downloadExcel(section: string) {
+  const workbook = new ExcelJS.Workbook();
+  const worksheet = workbook.addWorksheet('Estadísticas');
+
+  if (section === 'logUser') {
+    worksheet.addRow(['Nombre del Usuario', 'Fecha de Ingreso', 'Hora de Ingreso']);
+    this.listaLogUser.forEach(log => {
+      worksheet.addRow([log.nombreUsuario, log.diaHorario.fecha, log.diaHorario.hora]);
+    });
+  } else if (section === 'specialty') {
+    await this.addChartToWorksheet('pieChart', 'Cantidad de Turnos por Especialidad', workbook, worksheet);
+  } else if (section === 'dayOfWeek') {
+    await this.addChartToWorksheet('barChart', 'Cantidad de Turnos por Día de la Semana', workbook, worksheet);
+  } else if (section === 'doughnut') {
+    await this.addChartToWorksheet('doughnutChart', 'Cantidad de Turnos Solicitados por Médico (No Finalizados)', workbook, worksheet);
+  } else if (section === 'doughnutFinalizado') {
+    await this.addChartToWorksheet('doughnutChartDos', 'Cantidad de Turnos Solicitados por Médico (Finalizados)', workbook, worksheet);
+  }
+
+  // Guardar el archivo
+  workbook.xlsx.writeBuffer().then((buffer) => {
+    saveAs(new Blob([buffer]), `estadisticas_${section}.xlsx`);
+  });
+}
+
+// Método auxiliar para agregar gráficos al worksheet
+async addChartToWorksheet(chartId: string, title: string, workbook: ExcelJS.Workbook, worksheet: ExcelJS.Worksheet) {
+  const canvas = document.getElementById(chartId) as HTMLCanvasElement;
+  if (canvas) {
+    const image = canvas.toDataURL('image/png');
+    const imageId = workbook.addImage({
+      base64: image,
+      extension: 'png',
+    });
+    worksheet.addRow([title]);
+    worksheet.addImage(imageId, {
+      tl: { col: 1, row: worksheet.lastRow.number + 1 },
+      ext: { width: canvas.width, height: canvas.height }
+    });
+    worksheet.addRow([]);
+  }
+}
 }
